@@ -1,0 +1,13 @@
+.catMenu {
+    width: 672px;
+    margin: 105px;
+    margin-right: 155px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.accImg {
+    right: '20px';
+    cursor: pointer;
+}
