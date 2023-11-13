@@ -1,9 +1,11 @@
 .myLi {
     margin: 5px;
+    z-index: 1000;
 }
 
 .menuList.active {
     visibility: hidden;
+    z-index: 1000;
 }
 
 .menuList {
@@ -12,9 +14,12 @@
     top: 40px;
     width: auto;
     padding: 5px;
-    background-color: #fff;
+    background-color: #222222;
+    color: #ffffff;
     border: 1px solid #992C5A;
     border-radius: 5px;
     list-style-type: none;
     font-size: 20px;
+    font-weight: bold;
+    z-index: 1000;
 }

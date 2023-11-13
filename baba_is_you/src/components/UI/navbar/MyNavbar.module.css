@@ -1,0 +1,32 @@
+.navbar {
+    width: 195px;
+    height: 100%;
+    background-color: #303030;
+    opacity: 0.92;
+    position: fixed;
+    padding-top: 45px;
+    padding-left: 45px;
+    padding-right: 3px;
+    z-index: 100;
+}
+
+.navTool {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.toolBlock {
+    font-size: 16px;
+    color: #fff;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.pTool {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 15px;
+}

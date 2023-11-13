@@ -5,9 +5,43 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
 }
 
 .accImg {
     right: '20px';
     cursor: pointer;
+}
+
+.searchImg {
+    margin-right: 30px;
+    background-color: #fff;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    cursor: pointer;
+}
+
+.bk {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+.pageBlock {
+    margin-top: 60px;
+    width: 1230px;
+    height: 100%;
+    z-index: 10;
+}
+
+.backImg {
+    background-image: url(https://sun9-21.userapi.com/impg/aR_Kw_uLp5h3GLp-3tezhV_gTk6semWpDq5W8Q/fs1rUAmvrJ8.jpg?size=1723x912&quality=96&sign=6bc611c29c6cb9b4664af62139ab85bb&type=album);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
 }

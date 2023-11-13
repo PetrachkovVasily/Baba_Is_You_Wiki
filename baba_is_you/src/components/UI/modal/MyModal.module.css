@@ -13,11 +13,12 @@
     background: #992C5A;
     border-radius: 30px;
     min-width: 240px;
-    height: 315px;
+    height: auto;
 }
 
 .myModal.active {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1100;
 }

@@ -1,0 +1,23 @@
+.commentName {
+    margin: 15px;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.comHead {
+    margin: 5px;
+    margin-left: 15px;
+}
+
+.userName {
+    font-size: 26px;
+    color: #F34A91;
+    margin: 0;
+    font-weight: normal;
+}
+
+.commentDate {
+    margin: 0;
+    font-size: 13px;
+    font-weight: normal;
+}

@@ -3,17 +3,17 @@ import classes from './MyForm.module.css'
 import MyInput from "../input/MyInput";
 import MyButton from "../button/MyButton";
 
-function MyForm({visible, setVisible}) {
+function MyForm({visible, setVisible, switcher, setSwitcher}) {
     const [head, setHead] = useState('LOG IN');
-    const [switchBtn, setSwitchBtn] = useState('Registration');
-    let [switcher, setSwitcher] = useState(true);
+    const [switchBtn, setSwitchBtn] = useState('Sign up');
+    
 
     function handleSwitch() {
         if (switcher) {
             setSwitchBtn('Log in');
-            setHead('REGISTRATION');
+            setHead('SIGN UP');
         } else {
-            setSwitchBtn('Registration');
+            setSwitchBtn('Sign up');
             setHead('LOG IN');
         }
         setSwitcher(!switcher);
@@ -27,12 +27,10 @@ function MyForm({visible, setVisible}) {
             <h1 className={classes.myHead}>{head}</h1>
             <MyInput className={classes.formInput} placeholder='Login'/>
             <MyInput className={classes.formInput} placeholder='Password' type='password'/>
-            <MyButton onClick={handleSwitch} className={classes.switchBtn}>
+            <h1 onClick={handleSwitch} className={classes.switchBtn}>
                 /{switchBtn}
-            </MyButton>
-            <MyButton onClick={formSender} className={classes.formBtn}>
-                {head}
-            </MyButton>
+            </h1>
+            <button onClick={formSender} className={classes.formBtn}>{head}</button>
         </div>
     )
 }
