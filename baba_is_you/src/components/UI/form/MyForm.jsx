@@ -3,7 +3,7 @@ import classes from './MyForm.module.css'
 import MyInput from "../input/MyInput";
 import MyButton from "../button/MyButton";
 
-function MyForm({visible, setVisible, switcher, setSwitcher}) {
+function MyForm({visible, setVisible, switcher, setSwitcher, users}) {
     const [head, setHead] = useState('LOG IN');
     const [switchBtn, setSwitchBtn] = useState('Sign up');
     
@@ -21,6 +21,14 @@ function MyForm({visible, setVisible, switcher, setSwitcher}) {
 
     function formSender() {
         setVisible(!visible);
+    }
+
+    function addNewUser() {
+
+    }
+
+    function authUser() {
+        
     }
     return (
         <div className={classes.myForm}>

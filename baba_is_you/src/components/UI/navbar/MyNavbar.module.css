@@ -14,7 +14,9 @@
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 20px;
+    font-weight: bold;
     color: #fff;
+    text-decoration: none;
 }
 
 .toolBlock {
@@ -29,4 +31,7 @@
     font-weight: normal;
     margin: 0;
     margin-bottom: 15px;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
 }

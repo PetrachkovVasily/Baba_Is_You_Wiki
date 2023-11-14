@@ -12,6 +12,11 @@ import MyCommentBlock from "./components/UI/commentBlock/MyCommentBlock";
 import MyComment from "./components/UI/comment/MyComment";
 
 function App() {
+  const users = [
+    {userId: 1, userName: 'Stepa', password: 'jopa'},
+    {userId: 2, userName: 'Stepa1', password: 'jopa1'},
+    {userId: 3, userName: 'Stepa2', password: 'jopa2'},
+  ]
   
   const categories = [
     {name: 'category 1', subcutegories: ['sub cut 1', 'sub cut 2', 'sub cut 3']},
@@ -19,6 +24,37 @@ function App() {
     {name: 'category 3', subcutegories: ['sub cut 12', 'sub cut 22', 'sub cut 32']},
     {name: 'category 4', subcutegories: ['sub cut 13', 'sub cut 23', 'sub cut 33']},
   ]
+
+  const pages = [
+    {pageId: 1, pageName: 'Name 1', subcutegory: 'sub cut 32', pageDescription: 'description 1',},
+    {pageId: 2, pageName: 'Name 2', subcutegory: 'sub cut 11', pageDescription: 'description 2',},
+  ]
+
+  const pageContent = [
+    {pageId: 1, content: [
+      {paragraphID: 1, paragraphName: 'p 1', description: 'description 1'},
+      {paragraphID: 2, paragraphName: 'p 2', description: ''},
+      {paragraphID: 3, paragraphName: 'p 3', description: 'description 1'},
+      {paragraphID: 4, paragraphName: 'p 4', description: 'description 3'},
+    ]},
+    {pageId: 2, content: [
+      {paragraphName: 'p 1', description: 'description 2'},
+      {paragraphName: 'p 2', description: ''},
+      {paragraphName: 'p 3', description: 'description 2'},
+    ]},
+  ]
+
+  const comments = [
+    {pageId: 1, pageComments: [
+      {userName: 'Current user', commentDate: 'date', commentText: 'text 1'},
+      {userName: 'other Current user', commentDate: 'date', commentText: 'text 2'},
+      {userName: 'other other Current user', commentDate: 'date', commentText: 'text 3'},
+    ]},
+    {pageId: 2, pageComments: [
+      {userName: 'other Current user', commentDate: new Date(), commentText: 'text 4'},
+    ]},
+  ]
+
   const [inputBody, setInputBody] = useState('');
 
   function handleSearch(event) {
@@ -40,7 +76,7 @@ function App() {
       <div className={classes.backImg}></div>
       <div className={classes.bk}>
         <MyModal visible={visible} setVisible={setVisible}>
-          <MyForm visible={visible} setVisible={setVisible} switcher={switcher} setSwitcher={setSwitcher}/>
+          <MyForm visible={visible} setVisible={setVisible} switcher={switcher} setSwitcher={setSwitcher} users={users}/>
         </MyModal>
         <MyHeader>
           <div className={classes.catMenu}>
@@ -90,10 +126,17 @@ function App() {
         </MyHeader>
 
         <div className={classes.pageBlock}>
-          <MyNavbar/>
-          <MyContentBlock>
-            <MyCommentBlock>
-              <MyComment/>
+          <MyNavbar pageName={pages[0].pageName} paragraphs={pageContent[0].content}/>
+          <MyContentBlock page={pages[0]} paragraphs={pageContent[0].content} categories={categories}>
+            <MyCommentBlock comments={comments[0].pageComments}>
+              {
+                comments[0].pageComments.map((item) => {
+                  return (
+                    <MyComment comment={item}/>
+                  );
+                })
+              }
+              
             </MyCommentBlock>
           </MyContentBlock>
         </div>

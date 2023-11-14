@@ -1,16 +1,27 @@
 import React from "react"
 import classes from './MyNavbar.module.css'
 
-function MyNavbar() {
+function MyNavbar({pageName, paragraphs}) {
+    console.log(paragraphs)
     return (
         <div className={classes.navbar}>
-            <h2 className={classes.navTool}>{'Page name'}</h2>
+            <a href="#pageTitle" className={classes.navTool}>{pageName}</a>
             <div className={classes.toolBlock}>
-                <h3 className={classes.pTool}>{'paragraph name'}</h3>
-                <h3 className={classes.pTool}>{'paragraph name'}</h3>
+                {
+                    paragraphs.map((item) => {
+                        return (
+                            <>
+                                <a href={'#' + item.paragraphID} className={classes.pTool}>{item.paragraphName}</a>
+                                <p/>
+                            </>
+                        );
+                    })
+                }
+                
             </div>
-            <h2 className={classes.navTool}>{'Category'}</h2>
-            <h2 className={classes.navTool}>{'Comments'}</h2>
+            <a href="#category" className={classes.navTool}>{'Category'}</a>
+            <p/> 
+            <a href="#comments" className={classes.navTool}>{'Comments'}</a>
         </div>
     )
 }
