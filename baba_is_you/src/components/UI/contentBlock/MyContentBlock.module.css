@@ -27,6 +27,13 @@
     font-weight: lighter;
     color: #ffffff;
     margin-top: 30px;
+    background-color: #222222;
+    border: 1px solid;
+    border-color: #a6a6a6;
+}
+
+.pageP.active {
+    border: none;
 }
 
 .pageCat {
@@ -66,4 +73,9 @@
     padding: 0;
     display: flex;
     justify-content: space-between;
+}
+
+.description.active {
+    resize: none;
+    border: none;
 }

@@ -25,12 +25,12 @@ function App() {
     {name: 'category 4', subcutegories: ['sub cut 13', 'sub cut 23', 'sub cut 33']},
   ]
 
-  const pages = [
+  const [pages , setPages] = useState([
     {pageId: 1, pageName: 'Name 1', subcutegory: 'sub cut 32', pageDescription: 'description 1',},
     {pageId: 2, pageName: 'Name 2', subcutegory: 'sub cut 11', pageDescription: 'description 2',},
-  ]
+  ])
 
-  const pageContent = [
+  const [pageContent, setPageContent] = useState([
     {pageId: 1, content: [
       {paragraphID: 1, paragraphName: 'p 1', description: 'description 1'},
       {paragraphID: 2, paragraphName: 'p 2', description: ''},
@@ -38,11 +38,11 @@ function App() {
       {paragraphID: 4, paragraphName: 'p 4', description: 'description 3'},
     ]},
     {pageId: 2, content: [
-      {paragraphName: 'p 1', description: 'description 2'},
-      {paragraphName: 'p 2', description: ''},
-      {paragraphName: 'p 3', description: 'description 2'},
+      {paragraphID: 1, paragraphName: 'p 1', description: 'description 2'},
+      {paragraphID: 2, paragraphName: 'p 2', description: ''},
+      {paragraphID: 3, paragraphName: 'p 3', description: 'description 2'},
     ]},
-  ]
+  ])
 
   const comments = [
     {pageId: 1, pageComments: [
@@ -126,8 +126,8 @@ function App() {
         </MyHeader>
 
         <div className={classes.pageBlock}>
-          <MyNavbar pageName={pages[0].pageName} paragraphs={pageContent[0].content}/>
-          <MyContentBlock page={pages[0]} paragraphs={pageContent[0].content} categories={categories}>
+          <MyNavbar pageName={pages[0].pageName} setPages={setPages} paragraphs={pageContent[0].content}/>
+          <MyContentBlock pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories}>
             <MyCommentBlock comments={comments[0].pageComments}>
               {
                 comments[0].pageComments.map((item) => {

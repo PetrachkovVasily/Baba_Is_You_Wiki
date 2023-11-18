@@ -1,8 +1,7 @@
 import React from "react"
 import classes from './MyNavbar.module.css'
 
-function MyNavbar({pageName, paragraphs}) {
-    console.log(paragraphs)
+function MyNavbar({pageName, setPages, paragraphs}) {
     return (
         <div className={classes.navbar}>
             <a href="#pageTitle" className={classes.navTool}>{pageName}</a>
