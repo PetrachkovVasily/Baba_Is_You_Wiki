@@ -12,6 +12,8 @@ import MyCommentBlock from "./components/UI/commentBlock/MyCommentBlock";
 import MyComment from "./components/UI/comment/MyComment";
 
 function App() {
+  const [currentID, setCurrentID] = useState(1);
+
   const users = [
     {userId: 1, userName: 'Stepa', password: 'jopa'},
     {userId: 2, userName: 'Stepa1', password: 'jopa1'},
@@ -44,16 +46,16 @@ function App() {
     ]},
   ])
 
-  const comments = [
+  const [comments, setComments] = useState([
     {pageId: 1, pageComments: [
-      {userName: 'Current user', commentDate: 'date', commentText: 'text 1'},
-      {userName: 'other Current user', commentDate: 'date', commentText: 'text 2'},
-      {userName: 'other other Current user', commentDate: 'date', commentText: 'text 3'},
+      {userName: 'Current user', commentDate: Date.now(), commentText: 'text 1'},
+      {userName: 'other Current user', commentDate: Date.now(), commentText: 'text 2'},
+      {userName: 'other other Current user', commentDate: Date.now(), commentText: 'text 3'},
     ]},
     {pageId: 2, pageComments: [
       {userName: 'other Current user', commentDate: new Date(), commentText: 'text 4'},
     ]},
-  ]
+  ])
 
   const [inputBody, setInputBody] = useState('');
 
@@ -126,18 +128,9 @@ function App() {
         </MyHeader>
 
         <div className={classes.pageBlock}>
-          <MyNavbar pageName={pages[0].pageName} setPages={setPages} paragraphs={pageContent[0].content}/>
-          <MyContentBlock pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories}>
-            <MyCommentBlock comments={comments[0].pageComments}>
-              {
-                comments[0].pageComments.map((item) => {
-                  return (
-                    <MyComment comment={item}/>
-                  );
-                })
-              }
-              
-            </MyCommentBlock>
+          <MyNavbar pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} setPages={setPages} paragraphs={pageContent[pages.findIndex(page => page.pageId == currentID)].content}/>
+          <MyContentBlock currentID={currentID} pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories}>
+            <MyCommentBlock currentID={currentID} comments={comments} setComments={setComments}/>
           </MyContentBlock>
         </div>
       </div>

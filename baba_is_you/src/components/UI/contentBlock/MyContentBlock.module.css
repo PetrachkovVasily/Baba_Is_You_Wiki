@@ -55,7 +55,7 @@
 
 .description {
     max-width: 930px;
-    min-width: auto;
+    min-width: 930px;
     color: #ffffff;
     background-color: #222222;
     margin-left: 15px;
@@ -78,4 +78,37 @@
 .description.active {
     resize: none;
     border: none;
+}
+
+.delBtn {
+    cursor: 'pointer';
+    margin: 0;
+    margin-bottom: 0; 
+    margin-right: '45px';
+    margin-top: '30px';
+    padding: 0;
+    display: "flex";
+}
+
+.delBtn.active {
+    visibility: hidden;
+}
+
+.addBtn {
+    margin: 0;
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #b5346a;
+    border-radius: 10px;
+    height: auto;
+    width: auto;
+    color: #fff;
+    border: 0px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.addBtn.active {
+    visibility: hidden;
+    display: none;
 }
