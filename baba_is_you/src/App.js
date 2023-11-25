@@ -35,7 +35,7 @@ function App() {
   const [pageContent, setPageContent] = useState([
     {pageId: 1, content: [
       {paragraphID: 1, paragraphName: 'p 1', description: 'description 1'},
-      {paragraphID: 2, paragraphName: 'p 2', description: ''},
+      {paragraphID: 2, paragraphName: 'p 2', description: '...'},
       {paragraphID: 3, paragraphName: 'p 3', description: 'description 1'},
       {paragraphID: 4, paragraphName: 'p 4', description: 'description 3'},
     ]},
@@ -54,6 +54,21 @@ function App() {
     ]},
     {pageId: 2, pageComments: [
       {userName: 'other Current user', commentDate: new Date(), commentText: 'text 4'},
+    ]},
+  ])
+
+  const [history, setHistory] = useState([
+    {pageId: 1, pageHistory: [
+        {userName: 'Current user', dateOfChange: Date.now(), changes: [
+              'Blablabla paragraph was added',
+              'Blablabla paragraph was deleted',
+              'Blablabla paragraph description was changed',
+              'Blablabla paragraph name was changed',
+        ]},
+        {userName: 'other Current user', dateOfChange: Date.now(), changes: [
+          'Blablabla paragraph was added',
+          'Blablabla paragraph name was changed',
+        ]},
     ]},
   ])
 
@@ -129,7 +144,7 @@ function App() {
 
         <div className={classes.pageBlock}>
           <MyNavbar pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} setPages={setPages} paragraphs={pageContent[pages.findIndex(page => page.pageId == currentID)].content}/>
-          <MyContentBlock currentID={currentID} pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories}>
+          <MyContentBlock currentID={currentID} pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}>
             <MyCommentBlock currentID={currentID} comments={comments} setComments={setComments}/>
           </MyContentBlock>
         </div>
