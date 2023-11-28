@@ -11,7 +11,7 @@ function MyListMenu({isOpen, category, setIsOpen}) {
 
     return (
         <ul className={rootClasses.join(' ')}>
-            {category.subcutegories.map((item) => {
+            {category.subcategories.map((item) => {
                 return <li className={classes.myLi}>{item}</li>
             })}
         </ul>

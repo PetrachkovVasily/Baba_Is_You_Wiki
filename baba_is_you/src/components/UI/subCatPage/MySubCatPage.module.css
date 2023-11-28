@@ -1,0 +1,96 @@
+.pageBlock {
+    background-color: #222222;
+    margin: 0;
+    padding-left: 45px;
+    padding-top: 45px;
+    padding-bottom: 30px;
+}
+
+.title {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageH {
+    margin-top: 0;
+    font-size: 27px;
+    color: #F34A91;
+    margin-bottom: 30px;
+}
+
+.description {
+    max-width: 870px;
+    min-width: 870px;
+    color: #ffffff;
+    background-color: #222222;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 0;
+    font-size: 18px;
+}
+
+.description.active {
+    resize: none;
+    border: none;
+}
+
+.line {
+    background-color: #a6a6a6;
+    height: 1px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+    margin-right: 45px;
+}
+
+.linkList {
+    font-size: 25px;
+    font-weight: lighter;
+    color: #F34A91;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 30px;
+}
+
+.titleDiv {
+    margin-top: 45px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 45px;
+}
+
+.linksTitle {
+    font-weight: normal;
+    font-size: 26px;
+    margin: 0;
+}
+
+.linkElement {
+    color: #F34A91;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 5px;
+}
+
+.addBtn {
+    margin: 0;
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #b5346a;
+    border-radius: 10px;
+    height: auto;
+    width: auto;
+    color: #fff;
+    border: 0px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.addBtn.active {
+    visibility: hidden;
+    display: none;
+}

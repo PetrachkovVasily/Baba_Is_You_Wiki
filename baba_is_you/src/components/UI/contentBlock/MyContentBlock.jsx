@@ -1,11 +1,11 @@
-import React, { useState } from "react"
-import classes from './MyContentBlock.module.css'
-import edit from  '../../../images/edit.png'
-import historyImg from  '../../../images/history.png'
-import deleteBtn from  '../../../images/deleteBtn.png'
-import paragraphImg from  '../../../images/paragraphImg.png'
+import React, { useState } from "react";
+import classes from './MyContentBlock.module.css';
+import edit from  '../../../images/edit.png';
+import historyImg from  '../../../images/history.png';
+import deleteBtn from  '../../../images/deleteBtn.png';
+import { Link } from "react-router-dom";
 
-function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPageContent, categories, history, setHistory}) {
+function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent, categories, history, setHistory}) {
     const WAS_ADDED = 'was added';
     const WAS_DELETED = 'was deleted';
     const WAS_CHANGED = 'was changed';
@@ -19,7 +19,7 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
     const rootAddClasses = [classes.addBtn];
     const [editing, setEditing] = useState(true);
     let editBtn = '';
-    let currentCetegory = '';
+    let currentCategory = '';
     let [currentChanges, setCurrentChanges] = useState([]);
 
     findCategory(categories);
@@ -35,9 +35,9 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
 
     function findCategory(categories) {
         categories.forEach(item => {
-            item.subcutegories.forEach(subcut => {
-                if (subcut === pages[pages.findIndex(page => page.pageId == currentID)].subcutegory) {
-                    currentCetegory = item.name;
+            item.subcategories.forEach(subcat => {
+                if (subcat === pages[pages.findIndex(page => page.pageId == currentID)].subcategory) {
+                    currentCategory = item.name;
                 }
             });
         });
@@ -149,6 +149,13 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
         )
     }
 
+    function checkRaduce (currentContent) {
+        if (currentContent.length > 0)
+            return currentContent.reduce((previous, current) => previous.paragraphID > current.paragraphID ? previous : current).paragraphID + 1;
+        else
+            return 1;
+    }
+
     function handleAdd(event) {
         setPageContent(
             paragraphs.map((page) => {
@@ -156,8 +163,11 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
                     let currentContent = [...page.content];
                     currentContent = [
                         ...currentContent, // reduse ломается при 0 элементов
-                        {paragraphID: currentContent.reduce((previous, current) => previous.paragraphID > current.paragraphID ? previous : current).paragraphID + 1, paragraphName: 'Paragraph name', description: 'paragraph description'}
+                        {paragraphID: checkRaduce(currentContent),
+                        paragraphName: 'Paragraph name', 
+                        description: 'paragraph description'}
                     ];
+                    console.log(currentContent)
                     //history changes
                     if (!currentChanges.includes(PARAGRAPH + ' ' + WAS_ADDED)) {
                         setCurrentChanges([...currentChanges, PARAGRAPH + ' ' + WAS_ADDED]); //изменить позже
@@ -169,9 +179,6 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
             })  
         )
     }
-
-    console.log(history[0]);
-    console.log(currentChanges);
 
     return (
         <div className={classes.pageBlock}>
@@ -185,10 +192,10 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
                             <img src={edit} width={24} height={24} alt="edit"/>
                             <h3 style={{margin: 0, marginLeft: '5px', marginTop: '3px', color: '#F34A91'}}>{editBtn}</h3>
                         </div>
-                        <div style={{cursor: 'pointer',margin: 0, marginRight: '15px', padding: 0, display: "flex"}}>
+                        <Link to="/history" style={{cursor: 'pointer',margin: 0, marginRight: '15px', padding: 0, display: "flex", textDecoration: 'none'}}>
                             <img src={historyImg} width={24} height={24} alt="history"/>
                             <h3 style={{margin: 0, marginLeft: '5px', marginTop: '3px', color: '#F34A91'}}>History</h3>
-                        </div>
+                        </Link>
                     </div>
                     
                 </div>
@@ -215,10 +222,9 @@ function MyContentBlock({children, currentID, pages, setPages, paragraphs, setPa
                 
                 <h1 id="category" className={classes.pageH1}>Category</h1>
                 <h4 className={classes.pageCat}>
-                    {pages[pages.findIndex(page => page.pageId == currentID)].pageName}/{currentCetegory}/{pages[pages.findIndex(page => page.pageId == currentID)].subcutegory}
+                    {pages[pages.findIndex(page => page.pageId == currentID)].pageName}/{currentCategory}/{pages[pages.findIndex(page => page.pageId == currentID)].subcategory}
                 </h4>
             </div>
-            {children}
         </div>
     )
 }

@@ -1,5 +1,5 @@
 .contentBlock {
-    width: 1020px;
+    width: 945px;
     height: auto;
     background-color: #222222;
     margin-left: 243px;
@@ -54,8 +54,8 @@
 }
 
 .description {
-    max-width: 930px;
-    min-width: 930px;
+    max-width: 870px;
+    min-width: 870px;
     color: #ffffff;
     background-color: #222222;
     margin-left: 15px;

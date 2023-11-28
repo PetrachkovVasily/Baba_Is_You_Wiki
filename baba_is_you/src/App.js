@@ -10,9 +10,14 @@ import MyNavbar from "./components/UI/navbar/MyNavbar";
 import MyContentBlock from "./components/UI/contentBlock/MyContentBlock";
 import MyCommentBlock from "./components/UI/commentBlock/MyCommentBlock";
 import MyComment from "./components/UI/comment/MyComment";
+import MyHistory from "./components/UI/history/MyHistory";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import MyHomePage from "./components/UI/homePage/MyHomePage";
+import MySubCatPage from "./components/UI/subCatPage/MySubCatPage";
 
 function App() {
   const [currentID, setCurrentID] = useState(1);
+  const [currentSubCat, setCurrentSubCat] = useState('sub cut 32')
 
   const users = [
     {userId: 1, userName: 'Stepa', password: 'jopa'},
@@ -21,15 +26,19 @@ function App() {
   ]
   
   const categories = [
-    {name: 'category 1', subcutegories: ['sub cut 1', 'sub cut 2', 'sub cut 3']},
-    {name: 'category 2', subcutegories: ['sub cut 11', 'sub cut 21', 'sub cut 31']},
-    {name: 'category 3', subcutegories: ['sub cut 12', 'sub cut 22', 'sub cut 32']},
-    {name: 'category 4', subcutegories: ['sub cut 13', 'sub cut 23', 'sub cut 33']},
+    {name: 'category 1', subcategories: ['sub cut 1', 'sub cut 2', 'sub cut 3']},
+    {name: 'category 2', subcategories: ['sub cut 11', 'sub cut 21', 'sub cut 31']},
+    {name: 'category 3', subcategories: ['sub cut 12', 'sub cut 22', 'sub cut 32']},
+    {name: 'category 4', subcategories: ['sub cut 13', 'sub cut 23', 'sub cut 33']},
   ]
 
+  const [subcategories, setSubcategories] = useState([
+    {subcategory: 'sub cut 32', pageDescription: 'Sub cut description 32'},
+  ])
+
   const [pages , setPages] = useState([
-    {pageId: 1, pageName: 'Name 1', subcutegory: 'sub cut 32', pageDescription: 'description 1',},
-    {pageId: 2, pageName: 'Name 2', subcutegory: 'sub cut 11', pageDescription: 'description 2',},
+    {pageId: 1, pageName: 'Name 1', subcategory: 'sub cut 32', pageDescription: 'description 1',},
+    {pageId: 2, pageName: 'Name 2', subcategory: 'sub cut 11', pageDescription: 'description 2',},
   ])
 
   const [pageContent, setPageContent] = useState([
@@ -143,10 +152,35 @@ function App() {
         </MyHeader>
 
         <div className={classes.pageBlock}>
-          <MyNavbar pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} setPages={setPages} paragraphs={pageContent[pages.findIndex(page => page.pageId == currentID)].content}/>
-          <MyContentBlock currentID={currentID} pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}>
-            <MyCommentBlock currentID={currentID} comments={comments} setComments={setComments}/>
-          </MyContentBlock>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<MyHomePage />}/>
+              <Route path="subcategory" element={
+                <>
+                  <MySubCatPage setCurrentID={setCurrentID} currentID={currentID} 
+                  currentSubCat={currentSubCat} setSubcategories={setSubcategories} 
+                  subcategories={subcategories} 
+                  pages={pages} setPages={setPages} 
+                  pageContent={pageContent} setPageContent={setPageContent}
+                  comments={comments} setComments={setComments}
+                  history={history} setHistory={setHistory}/>
+                </>
+                }/>
+              <Route path="history" element={
+                <>
+                  <MyHistory history={history[pages.findIndex(pageHistory => pageHistory.pageId == currentID)]} pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} />
+                </>
+                }/>
+              <Route path="content" element={
+                <>
+                  <MyNavbar pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} setPages={setPages} paragraphs={pageContent[pages.findIndex(page => page.pageId == currentID)].content}/>
+                  <MyContentBlock currentID={currentID} pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}/>
+                  <MyCommentBlock currentID={currentID} comments={comments} setComments={setComments}/>
+                </>
+              }/>
+            </Routes>
+          </BrowserRouter>
+          
         </div>
       </div>
     </div>
