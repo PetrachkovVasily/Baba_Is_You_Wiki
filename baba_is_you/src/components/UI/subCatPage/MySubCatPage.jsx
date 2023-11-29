@@ -3,10 +3,10 @@ import classes from "./MySubCatPage.module.css"
 import edit from  '../../../images/edit.png'
 import historyImg from  '../../../images/history.png'
 import deleteBtn from  '../../../images/deleteBtn.png'
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useState } from "react";
 
-function MySubCatPage({setCurrentID, currentID, currentSubCat, subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory}) {
+function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory}) {
     const rootAreaClasses = [classes.description];
     const rootAddClasses = [classes.addBtn];
 
@@ -81,12 +81,9 @@ function MySubCatPage({setCurrentID, currentID, currentSubCat, subcategories, se
                         pages.map(page => {
                             if (page.subcategory == currentSubCat){
                             return (
-                                <li id={page.pageId}>
-                                    <Link id={page.pageId} to="/content" style={{cursor: 'pointer',textDecoration: 'none'}}>
-                                        <h3 onClick={(event) => {
-                                                    setCurrentID(event.target.id)
-                                                    console.log(currentID)
-                                                    }} className={classes.linkElement} id={page.pageId}>
+                                <li key={page.pageId} id={page.pageId}>
+                                    <Link id={page.pageId} to={`/content/${page.pageId}`} style={{cursor: 'pointer',textDecoration: 'none'}}>
+                                        <h3 className={classes.linkElement} id={page.pageId}>
                                             {page.pageName}
                                         </h3>
                                     </Link>

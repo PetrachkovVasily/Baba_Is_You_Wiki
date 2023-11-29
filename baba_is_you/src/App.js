@@ -16,7 +16,6 @@ import MyHomePage from "./components/UI/homePage/MyHomePage";
 import MySubCatPage from "./components/UI/subCatPage/MySubCatPage";
 
 function App() {
-  const [currentID, setCurrentID] = useState(1);
   const [currentSubCat, setCurrentSubCat] = useState('sub cut 32')
 
   const users = [
@@ -37,7 +36,7 @@ function App() {
   ])
 
   const [pages , setPages] = useState([
-    {pageId: 1, pageName: 'Name 1', subcategory: 'sub cut 32', pageDescription: 'description 1',},
+    {pageId: 1, pageName: 'Name 1', subcategory: 'sub cut 3w', pageDescription: 'description 1',},
     {pageId: 2, pageName: 'Name 2', subcategory: 'sub cut 11', pageDescription: 'description 2',},
   ])
 
@@ -157,7 +156,7 @@ function App() {
               <Route path="/" element={<MyHomePage />}/>
               <Route path="subcategory" element={
                 <>
-                  <MySubCatPage setCurrentID={setCurrentID} currentID={currentID} 
+                  <MySubCatPage
                   currentSubCat={currentSubCat} setSubcategories={setSubcategories} 
                   subcategories={subcategories} 
                   pages={pages} setPages={setPages} 
@@ -166,16 +165,16 @@ function App() {
                   history={history} setHistory={setHistory}/>
                 </>
                 }/>
-              <Route path="history" element={
+              <Route path="history/:id" element={
                 <>
-                  <MyHistory history={history[pages.findIndex(pageHistory => pageHistory.pageId == currentID)]} pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} />
+                  <MyHistory history={history} pages={pages} />
                 </>
                 }/>
-              <Route path="content" element={
+              <Route path="content/:id" element={
                 <>
-                  <MyNavbar pageName={pages[pages.findIndex(page => page.pageId == currentID)].pageName} setPages={setPages} paragraphs={pageContent[pages.findIndex(page => page.pageId == currentID)].content}/>
-                  <MyContentBlock currentID={currentID} pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}/>
-                  <MyCommentBlock currentID={currentID} comments={comments} setComments={setComments}/>
+                  <MyNavbar pages={pages} setPages={setPages} paragraphs={pageContent}/>
+                  <MyContentBlock pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}/>
+                  <MyCommentBlock comments={comments} setComments={setComments}/>
                 </>
               }/>
             </Routes>

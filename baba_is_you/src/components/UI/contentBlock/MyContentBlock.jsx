@@ -3,9 +3,12 @@ import classes from './MyContentBlock.module.css';
 import edit from  '../../../images/edit.png';
 import historyImg from  '../../../images/history.png';
 import deleteBtn from  '../../../images/deleteBtn.png';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent, categories, history, setHistory}) {
+function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories, history, setHistory}) {
+    const {id} = useParams();
+    console.log(id)
+    
     const WAS_ADDED = 'was added';
     const WAS_DELETED = 'was deleted';
     const WAS_CHANGED = 'was changed';
@@ -36,7 +39,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function findCategory(categories) {
         categories.forEach(item => {
             item.subcategories.forEach(subcat => {
-                if (subcat === pages[pages.findIndex(page => page.pageId == currentID)].subcategory) {
+                if (subcat == pages[pages.findIndex(page => page.pageId == id)].subcategory) {
                     currentCategory = item.name;
                 }
             });
@@ -46,7 +49,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function changePageDescription(event) {
         setPages(
             pages.map((page) => {
-                if (page.pageId === (currentID)) {
+                if (page.pageId == (id)) {
                     //history changes
                     if (!currentChanges.includes(page.pageName + ' ' + DESCRIPTION + ' ' + WAS_CHANGED)) {
                         setCurrentChanges([...currentChanges, page.pageName + ' ' + DESCRIPTION + ' ' + WAS_CHANGED]);
@@ -62,7 +65,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function changeTextArea(event) {
         setPageContent(
             paragraphs.map((page) => {
-                if (page.pageId === currentID) {
+                if (page.pageId == id) {
                     let currentContent = [...page.content];
                     currentContent.map((paragraph) => {
                         if (paragraph.paragraphID == event.target.id) {
@@ -84,7 +87,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function changeHistory() {
         setHistory(
             history.map((page) => {
-                if (page.pageId === currentID) {
+                if (page.pageId == id) {
                     let currentHistory = [...page.pageHistory];
                     currentHistory = [
                         ...currentHistory,
@@ -101,7 +104,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function changeInput(event) {
         setPageContent(
             paragraphs.map((page) => {
-                if (page.pageId === currentID) {
+                if (page.pageId == id) {
                     let currentContent = [...page.content];
                     currentContent.map((paragraph) => {
                         if (paragraph.paragraphID == event.target.id) {
@@ -131,12 +134,12 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function handleDelete(event) {
         setPageContent(
             paragraphs.map((page) => {
-                if (page.pageId === currentID) {
+                if (page.pageId == id) {
                     let currentContent = [...page.content];
                     //history changes
                     if (!currentChanges.includes(page.content[page.content.findIndex(paragraph => paragraph.paragraphID == event.target.id)].paragraphName + ' ' + WAS_DELETED)) {
                         setCurrentChanges([...currentChanges, page.content[page.content.findIndex(paragraph => paragraph.paragraphID == event.target.id)].paragraphName + ' ' + WAS_DELETED]);
-                        //pages[pages.findIndex(page => page.pageId == currentID)].pageDescription
+                        //pages[pages.findIndex(page => page.pageId == id)].pageDescription
                     }
                     currentContent = currentContent.filter((paragraph) => {
                        return paragraph.paragraphID != event.target.id;
@@ -159,7 +162,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
     function handleAdd(event) {
         setPageContent(
             paragraphs.map((page) => {
-                if (page.pageId === currentID) {
+                if (page.pageId == id) {
                     let currentContent = [...page.content];
                     currentContent = [
                         ...currentContent, // reduse ломается при 0 элементов
@@ -185,14 +188,14 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
             <div id="pageTitle" className={classes.contentBlock}>
                 <div className={classes.title}>
                     <h1 className={classes.pageH} style={{color: '#F34A91'}}>
-                        {pages[pages.findIndex(page => page.pageId == currentID)].pageName}
+                        {pages[pages.findIndex(page => page.pageId == id)].pageName}
                     </h1>
                     <div style={{margin: 0, padding: 0, marginRight: '30px', display: 'flex'}}>
                         <div onClick={editPage} style={{cursor: 'pointer', margin: 0, marginRight: '15px', padding: 0, display: "flex"}}>
                             <img src={edit} width={24} height={24} alt="edit"/>
                             <h3 style={{margin: 0, marginLeft: '5px', marginTop: '3px', color: '#F34A91'}}>{editBtn}</h3>
                         </div>
-                        <Link to="/history" style={{cursor: 'pointer',margin: 0, marginRight: '15px', padding: 0, display: "flex", textDecoration: 'none'}}>
+                        <Link to={`/history/${id}`} style={{cursor: 'pointer',margin: 0, marginRight: '15px', padding: 0, display: "flex", textDecoration: 'none'}}>
                             <img src={historyImg} width={24} height={24} alt="history"/>
                             <h3 style={{margin: 0, marginLeft: '5px', marginTop: '3px', color: '#F34A91'}}>History</h3>
                         </Link>
@@ -200,9 +203,9 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
                     
                 </div>
                 
-                <textarea disabled={editing} value={pages[pages.findIndex(page => page.pageId == currentID)].pageDescription} onChange={changePageDescription} className={rootAreaClasses.join(' ')}></textarea>
+                <textarea disabled={editing} value={pages[pages.findIndex(page => page.pageId == id)].pageDescription} onChange={changePageDescription} className={rootAreaClasses.join(' ')}></textarea>
                 {
-                    paragraphs[pages.findIndex(page => page.pageId == currentID)].content.map((paragraph) => {
+                    paragraphs[pages.findIndex(page => page.pageId == id)].content.map((paragraph) => {
                         return (
                             <div style={{margin: 0, padding: 0}} key={paragraph.paragraphID}>
                                 <div className={classes.title}>
@@ -222,7 +225,7 @@ function MyContentBlock({currentID, pages, setPages, paragraphs, setPageContent,
                 
                 <h1 id="category" className={classes.pageH1}>Category</h1>
                 <h4 className={classes.pageCat}>
-                    {pages[pages.findIndex(page => page.pageId == currentID)].pageName}/{currentCategory}/{pages[pages.findIndex(page => page.pageId == currentID)].subcategory}
+                    {pages[pages.findIndex(page => page.pageId == id)].pageName}/{currentCategory}/{pages[pages.findIndex(page => page.pageId == id)].subcategory}
                 </h4>
             </div>
         </div>

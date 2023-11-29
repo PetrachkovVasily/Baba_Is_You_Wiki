@@ -2,9 +2,13 @@ import React, { useState } from "react"
 import classes from './MyCommentBlock.module.css'
 import logo from  '../../../images/accountlogo.png'
 import MyComment from "../comment/MyComment";
+import { useParams } from "react-router-dom";
 
 
-function MyCommentBlock({currentID, comments, setComments}) {
+function MyCommentBlock({comments, setComments}) {
+    const {id} = useParams();
+    
+
     const [commText, setCommText] = useState('');
     
     function changeCommText(event) {
@@ -14,7 +18,8 @@ function MyCommentBlock({currentID, comments, setComments}) {
     function addComment(event) {
         setComments(
             comments.map((page) => {
-                if (page.pageId === currentID) {
+                console.log(id)
+                if (page.pageId == id) {
                     let currentComments = [...page.pageComments];
                     currentComments = [
                         ...currentComments,
@@ -26,13 +31,14 @@ function MyCommentBlock({currentID, comments, setComments}) {
                 }
             })  
         );
+        console.log(comments)
         setCommText('');
     }
     return (
         <div id="comments" className={classes.commentBlock}>
             <h1 className={classes.commentH}>Comments</h1>
             <h1 className={classes.commentsNumber}>
-                {comments[comments.findIndex(comment => comment.pageId == currentID)].pageComments.length} comments
+                {comments[comments.findIndex(comment => comment.pageId == id)].pageComments.length} comments
             </h1>
             <div className={classes.line}></div>
             <div className={classes.comLine}>
@@ -41,7 +47,7 @@ function MyCommentBlock({currentID, comments, setComments}) {
                 <button onClick={addComment} className={classes.comBtn}>Add comment</button>
             </div>
             {
-                comments[comments.findIndex(comment => comment.pageId == currentID)].pageComments.map((item) => {
+                comments[comments.findIndex(comment => comment.pageId == id)].pageComments.map((item) => {
                     return (
                       <MyComment comment={item}/>
                     );
