@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
 import MyHeader from "./components/UI/header/MyHeader";
@@ -9,35 +9,38 @@ import MyForm from "./components/UI/form/MyForm";
 import MyNavbar from "./components/UI/navbar/MyNavbar";
 import MyContentBlock from "./components/UI/contentBlock/MyContentBlock";
 import MyCommentBlock from "./components/UI/commentBlock/MyCommentBlock";
-import MyComment from "./components/UI/comment/MyComment";
 import MyHistory from "./components/UI/history/MyHistory";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import MyHomePage from "./components/UI/homePage/MyHomePage";
 import MySubCatPage from "./components/UI/subCatPage/MySubCatPage";
+import MyUserPage from "./components/UI/userPage/MyUserPage";
 
 function App() {
-  const [currentSubCat, setCurrentSubCat] = useState('sub cut 32')
+  const [currentUserID, setCurrentUser] = useState(1)
 
-  const users = [
-    {userId: 1, userName: 'Stepa', password: 'jopa'},
-    {userId: 2, userName: 'Stepa1', password: 'jopa1'},
-    {userId: 3, userName: 'Stepa2', password: 'jopa2'},
-  ]
+  const [users, setUsers] = useState([
+    {userId: 1, userName: 'Stepa', password: 'jopa', pages: [1, 2]},
+  ])
+
+  const [admins, setAdmins] = useState([
+    {adminId: 1, adminName: 'Vasya', password: 'qwerty', users: [1]},
+  ])
   
-  const categories = [
-    {name: 'category 1', subcategories: ['sub cut 1', 'sub cut 2', 'sub cut 3']},
-    {name: 'category 2', subcategories: ['sub cut 11', 'sub cut 21', 'sub cut 31']},
-    {name: 'category 3', subcategories: ['sub cut 12', 'sub cut 22', 'sub cut 32']},
-    {name: 'category 4', subcategories: ['sub cut 13', 'sub cut 23', 'sub cut 33']},
-  ]
+  const [categories, setCategory] = useState([
+    {categoryID: 1, name: 'category 3', subcategories: [
+      {name: '32w2', subcategoryID: 32},
+      {name: 'sdsdsdsd', subcategoryID: 33},
+    ]},
+  ])
 
   const [subcategories, setSubcategories] = useState([
-    {subcategory: 'sub cut 32', pageDescription: 'Sub cut description 32'},
+    {subcategoryID: 32, subcategory: '32w2', pageDescription: 'Sub cut description 32'},
+    {subcategoryID: 33, subcategory: 'sdsdsdsd', pageDescription: 'Sub cut description 32'},
   ])
 
   const [pages , setPages] = useState([
-    {pageId: 1, pageName: 'Name 1', subcategory: 'sub cut 3w', pageDescription: 'description 1',},
-    {pageId: 2, pageName: 'Name 2', subcategory: 'sub cut 11', pageDescription: 'description 2',},
+    {pageId: 1, pageName: 'Name 1', subcategoryID: 32, pageDescription: 'description 1',},
+    {pageId: 2, pageName: 'Name 2', subcategoryID: 33, pageDescription: 'description 2',},
   ])
 
   const [pageContent, setPageContent] = useState([
@@ -83,20 +86,24 @@ function App() {
   const [inputBody, setInputBody] = useState('');
 
   function handleSearch(event) {
-    console.log(inputBody);
     setInputBody('');
   }
 
-  const [isOpen, setIsOpen] = useState(true);
-  const [isOpen1, setIsOpen1] = useState(true);
-  const [isOpen2, setIsOpen2] = useState(true);
-  const [isOpen3, setIsOpen3] = useState(true);
+  const [isOpen, setIsOpen] = useState([]);
 
   const [visible, setVisible] = useState(false);
 
   let [switcher, setSwitcher] = useState(true);
 
+  
+  useEffect(() => {
+    setIsOpen([...categories.map(cat => {
+      return {categoryID: cat.categoryID, name: cat.name, open: true}
+    })])
+  }, [categories])
+
   return (
+  <BrowserRouter>
     <div className="App">
       <div className={classes.backImg}></div>
       <div className={classes.bk}>
@@ -105,37 +112,29 @@ function App() {
         </MyModal>
         <MyHeader>
           <div className={classes.catMenu}>
-            <MyButton onClick={(e) => {
-              setIsOpen(!isOpen);
-              e.target.nextSibling.style.left = e.target.offsetLeft + 'px';
-              }}>
-              {categories[0].name}
-            </MyButton>
-            <MyListMenu isOpen={isOpen} setIsOpen={setIsOpen} category={categories[0]}/>
-
-            <MyButton onClick={(e) => {
-              setIsOpen1(!isOpen1);
-              e.target.nextSibling.style.left = e.target.offsetLeft + 'px';
-              }}>
-              {categories[1].name}
-            </MyButton>
-            <MyListMenu isOpen={isOpen1} setIsOpen={setIsOpen1} category={categories[1]}/>
-
-            <MyButton onClick={(e) => {
-              setIsOpen2(!isOpen2);
-              e.target.nextSibling.style.left = e.target.offsetLeft + 'px';
-              }}>
-              {categories[2].name}
-            </MyButton>
-            <MyListMenu isOpen={isOpen2} setIsOpen={setIsOpen2} category={categories[2]}/>
-
-            <MyButton onClick={(e) => {
-              setIsOpen3(!isOpen3);
-              e.target.nextSibling.style.left = e.target.offsetLeft + 'px';
-              }}>
-              {categories[3].name}
-            </MyButton>
-            <MyListMenu isOpen={isOpen3} setIsOpen={setIsOpen3} category={categories[3]}/>
+            {
+                isOpen.map((cat) => {
+                    return (
+                      <div key={cat.categoryID}>
+                      <MyButton id={cat.categoryID} onClick={(e) => {
+                        setIsOpen(
+                          isOpen.map(cat => {
+                            if (cat.categoryID == e.target.id) {
+                              return {...cat, open: !cat.open}
+                            } else {
+                              return cat;
+                            }
+                          })
+                        );
+                        e.target.nextSibling.style.left = e.target.offsetLeft + 'px';
+                        }}>
+                        {cat.name}
+                      </MyButton>
+                      <MyListMenu id={cat.categoryID} isOpen={cat.open} setIsOpen={setIsOpen} category={categories[categories.findIndex(category => category.categoryID == cat.categoryID)]}/>
+                      </div>
+                    )
+                })
+            }
           </div>
 
           <MyInput 
@@ -144,20 +143,21 @@ function App() {
             type='text' 
             placeholder='Search'/>
             <img onClick={handleSearch} src="https://www.svgrepo.com/show/493720/search-magnify-magnifier-glass.svg" alt="search" height={36} width={30} className={classes.searchImg}/>
-
-          <img onClick={() => {
-            setVisible(!visible);
-          }} src="https://www.svgrepo.com/show/453446/account.svg" height={50} width={50} alt="acc img" className={classes.accImg}/>
+          <Link to='user/'>
+            <img onClick={() => {
+              setVisible(!visible);
+            }} src="https://www.svgrepo.com/show/453446/account.svg" height={50} width={50} alt="acc img" className={classes.accImg}/>
+          </Link>
         </MyHeader>
 
         <div className={classes.pageBlock}>
-          <BrowserRouter>
+          
             <Routes>
-              <Route path="/" element={<MyHomePage />}/>
-              <Route path="subcategory" element={
+              <Route path="/" element={<MyHomePage isOpen={isOpen} setIsOpen={setIsOpen} categories={categories} setCategory={setCategory} subcategories={subcategories} setSubcategories={setSubcategories}/>}/>
+              <Route path="subcategory/:subcategoryID" element={
                 <>
                   <MySubCatPage
-                  currentSubCat={currentSubCat} setSubcategories={setSubcategories} 
+                  setSubcategories={setSubcategories} 
                   subcategories={subcategories} 
                   pages={pages} setPages={setPages} 
                   pageContent={pageContent} setPageContent={setPageContent}
@@ -172,17 +172,23 @@ function App() {
                 }/>
               <Route path="content/:id" element={
                 <>
-                  <MyNavbar pages={pages} setPages={setPages} paragraphs={pageContent}/>
+                  <MyNavbar pages={pages} setPages={setPages} paragraphs={pageContent} users={users} setUsers={setUsers} currentUserID={currentUserID}/>
                   <MyContentBlock pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}/>
                   <MyCommentBlock comments={comments} setComments={setComments}/>
                 </>
               }/>
+              <Route path="user/" element={
+                <>
+                  <MyUserPage users={users} setUsers={setUsers} currentUserID={currentUserID} pages={pages}/>
+                </>
+              }/>
             </Routes>
-          </BrowserRouter>
+          
           
         </div>
       </div>
     </div>
+    </BrowserRouter>
   );
 }
 

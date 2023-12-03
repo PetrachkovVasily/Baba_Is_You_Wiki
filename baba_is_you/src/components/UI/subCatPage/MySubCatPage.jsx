@@ -6,8 +6,12 @@ import deleteBtn from  '../../../images/deleteBtn.png'
 import { Link, useParams } from "react-router-dom"
 import { useState } from "react";
 
-function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory}) {
+function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory}) {
+    const {subcategoryID} = useParams()
+    console.log(subcategoryID)
+
     const rootAreaClasses = [classes.description];
+    const rootInputClasses = [classes.linkElement];
     const rootAddClasses = [classes.addBtn];
 
     const [editing, setEditing] = useState(true);
@@ -15,6 +19,7 @@ function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, se
 
     if (editing) {
         rootAreaClasses.push(classes.active);
+        rootInputClasses.push(classes.active);
         rootAddClasses.push(classes.active);
         editBtn = 'Edit';
     } else {
@@ -28,7 +33,7 @@ function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, se
     function changePageDescription(event) {
         setSubcategories(
             subcategories.map((page) => {
-                if (page.subcategory == (currentSubCat)) {
+                if (page.subcategoryID == (subcategoryID)) {
                     return {...page , pageDescription: event.target.value};
                 } else {
                     return page;
@@ -39,7 +44,7 @@ function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, se
     
     function addPage() {
         setPages(
-            [...pages, {pageId: setPageID(pages), pageName: 'Page name', subcategory: currentSubCat, pageDescription: 'add description',}]
+            [...pages, {pageId: setPageID(pages), pageName: 'Page name', subcategoryID: subcategoryID, pageDescription: 'add description',}]
         )
         setPageContent(
             [...pageContent, {pageId: setPageID(pages), content: []}]
@@ -56,11 +61,39 @@ function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, se
        return pages.reduce((previous, current) => previous.pageId > current.pageId ? previous : current).pageId + 1;
     }
 
+    function changePageName(event) {
+        setPages(
+            pages.map((page) => {
+                if (page.pageId == (event.target.id)) {
+                    return {...page , pageName: event.target.value};
+                } else {
+                    return page;
+                }
+            })
+        );
+    }
+
+    function editLink (editing, page) {
+        if (editing) {
+            return (
+                <Link id={page.pageId} to={`/content/${page.pageId}`} className={classes.link}>
+                    <h1 className={rootInputClasses.join(' ')} id={page.pageId}>
+                        {page.pageName}
+                    </h1>
+                </Link>
+            ) 
+        } else {
+                return (
+                    <input className={classes.linkInput} onChange={changePageName} id={page.pageId} value={page.pageName}></input>
+                )
+            }
+    }
+
     return (
         <div className={classes.pageBlock}>
             <div className={classes.title}>
                     <h1 className={classes.pageH} style={{color: '#F34A91'}}>
-                        {subcategories[subcategories.findIndex(page => page.subcategory == currentSubCat)].subcategory}
+                        {subcategories[subcategories.findIndex(page => page.subcategoryID == subcategoryID)].subcategory}
                     </h1>
                     <div style={{margin: 0, padding: 0, marginRight: '30px', display: 'flex'}}>
                         <div onClick={editPage} style={{cursor: 'pointer', margin: 0, marginRight: '15px', padding: 0, display: "flex"}}>
@@ -69,7 +102,7 @@ function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, se
                         </div>
                     </div>
             </div>                    
-            <textarea disabled={editing} value={subcategories[subcategories.findIndex(page => page.subcategory == currentSubCat)].pageDescription} onChange={changePageDescription} className={rootAreaClasses.join(' ')}></textarea>
+            <textarea disabled={editing} value={subcategories[subcategories.findIndex(page => page.subcategoryID == subcategoryID)].pageDescription} onChange={changePageDescription} className={rootAreaClasses.join(' ')}></textarea>
 
             <div>
                 <div className={classes.titleDiv}>
@@ -79,14 +112,10 @@ function MySubCatPage({currentSubCat, subcategories, setSubcategories, pages, se
                 <ul className={classes.linkList}>
                     {
                         pages.map(page => {
-                            if (page.subcategory == currentSubCat){
+                            if (page.subcategoryID == subcategoryID){
                             return (
                                 <li key={page.pageId} id={page.pageId}>
-                                    <Link id={page.pageId} to={`/content/${page.pageId}`} style={{cursor: 'pointer',textDecoration: 'none'}}>
-                                        <h3 className={classes.linkElement} id={page.pageId}>
-                                            {page.pageName}
-                                        </h3>
-                                    </Link>
+                                    {editLink(editing, page)}
                                 </li>
                             )
                             }

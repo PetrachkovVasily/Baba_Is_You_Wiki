@@ -1,5 +1,6 @@
 import React from "react"
 import classes from './MyListMenu.module.css'
+import { Link } from "react-router-dom";
 
 function MyListMenu({isOpen, category, setIsOpen}) {
 
@@ -9,10 +10,12 @@ function MyListMenu({isOpen, category, setIsOpen}) {
         rootClasses.push(classes.active);
     } 
 
+    
     return (
         <ul className={rootClasses.join(' ')}>
             {category.subcategories.map((item) => {
-                return <li className={classes.myLi}>{item}</li>
+                console.log(category)
+                return <Link to={`/subcategory/${item.subcategoryID}`} key={item.subcategoryID} className={classes.myLi}>{item.name}</Link>
             })}
         </ul>
     )

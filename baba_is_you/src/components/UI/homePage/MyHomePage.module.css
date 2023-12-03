@@ -5,3 +5,125 @@
     padding-top: 45px;
     padding-bottom: 30px;
 }
+
+.pageTitle {
+    margin-top: 0;
+    font-size: 28px;
+    color: #F34A91;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.titleDiv {
+    margin-top: 0px;
+    color: #ffffff;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 30px;
+}
+
+.categoryTitle {
+    font-weight: normal;
+    font-size: 26px;
+    margin: 0;
+    background-color: #222222;
+    border: 1px solid;
+    border-color: #a6a6a6;
+    color: #ffffff;
+}
+
+.categoryTitle.active {
+    border: none;
+}
+
+.line {
+    background-color: #a6a6a6;
+    height: 1px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+    margin-right: 45px;
+}
+
+.categoryList {
+    font-size: 25px;
+    font-weight: lighter;
+    color: #F34A91;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 30px;
+}
+
+.subcatElement {
+    font-size: 18px;
+    margin: 0;
+    font-weight: normal;
+    padding: 5px;
+}
+
+.linkElement {
+    color: #F34A91;
+    background-color: #222222;
+    width: 900px;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 5px;
+    margin: 0;
+    text-decoration: none;
+}
+
+.linkElement.active {
+    border: none;
+    text-decoration: none;
+}
+
+.linkInput {
+    min-width: auto;
+    max-width: 600px;
+    margin-bottom: 15px;
+    color: #F34A91;
+    background-color: #222222;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 5px;
+    border: 1px solid;
+    border-color: #a6a6a6;
+}
+
+.link {
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.delBtn {
+    cursor: 'pointer';
+    margin: 0;
+    margin-bottom: 0; 
+    margin-right: '45px';
+    padding: 0;
+    display: "flex";
+}
+
+.delBtn.active {
+    visibility: hidden;
+}
+
+.addBtn {
+    margin: 0;
+    padding: 15px;
+    background-color: #b5346a;
+    border-radius: 10px;
+    height: auto;
+    width: auto;
+    color: #fff;
+    border: 0px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.addBtn.active {
+    visibility: hidden;
+    display: none;
+}

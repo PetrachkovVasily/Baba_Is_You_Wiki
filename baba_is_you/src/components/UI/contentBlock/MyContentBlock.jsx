@@ -7,7 +7,6 @@ import { Link, useParams } from "react-router-dom";
 
 function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories, history, setHistory}) {
     const {id} = useParams();
-    console.log(id)
     
     const WAS_ADDED = 'was added';
     const WAS_DELETED = 'was deleted';
@@ -23,6 +22,7 @@ function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories
     const [editing, setEditing] = useState(true);
     let editBtn = '';
     let currentCategory = '';
+    let currentSubCategory = '';
     let [currentChanges, setCurrentChanges] = useState([]);
 
     findCategory(categories);
@@ -39,8 +39,9 @@ function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories
     function findCategory(categories) {
         categories.forEach(item => {
             item.subcategories.forEach(subcat => {
-                if (subcat == pages[pages.findIndex(page => page.pageId == id)].subcategory) {
-                    currentCategory = item.name;
+                if (subcat.subcategoryID == pages[pages.findIndex(page => page.pageId == id)].subcategoryID) {
+                    currentCategory = item;
+                    currentSubCategory = subcat;
                 }
             });
         });
@@ -170,7 +171,6 @@ function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories
                         paragraphName: 'Paragraph name', 
                         description: 'paragraph description'}
                     ];
-                    console.log(currentContent)
                     //history changes
                     if (!currentChanges.includes(PARAGRAPH + ' ' + WAS_ADDED)) {
                         setCurrentChanges([...currentChanges, PARAGRAPH + ' ' + WAS_ADDED]); //изменить позже
@@ -225,7 +225,7 @@ function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories
                 
                 <h1 id="category" className={classes.pageH1}>Category</h1>
                 <h4 className={classes.pageCat}>
-                    {pages[pages.findIndex(page => page.pageId == id)].pageName}/{currentCategory}/{pages[pages.findIndex(page => page.pageId == id)].subcategory}
+                    {pages[pages.findIndex(page => page.pageId == id)].pageName}/{currentCategory.name}/{currentSubCategory.name}
                 </h4>
             </div>
         </div>

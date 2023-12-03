@@ -1,6 +1,9 @@
 .myLi {
     margin: 5px;
     z-index: 1000;
+    color: #ffffff;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .menuList.active {
@@ -22,4 +25,7 @@
     font-size: 20px;
     font-weight: bold;
     z-index: 1000;
+
+    display: flex;
+    flex-flow: column wrap;
 }

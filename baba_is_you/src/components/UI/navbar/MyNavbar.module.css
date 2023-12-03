@@ -35,3 +35,13 @@
     color: #fff;
     text-decoration: none;
 }
+
+.saveBtn {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #F34A91;
+    cursor: pointer;
+    text-decoration: none;
+}
