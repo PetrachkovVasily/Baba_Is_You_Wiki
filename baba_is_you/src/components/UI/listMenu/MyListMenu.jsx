@@ -14,7 +14,6 @@ function MyListMenu({isOpen, category, setIsOpen}) {
     return (
         <ul className={rootClasses.join(' ')}>
             {category.subcategories.map((item) => {
-                console.log(category)
                 return <Link to={`/subcategory/${item.subcategoryID}`} key={item.subcategoryID} className={classes.myLi}>{item.name}</Link>
             })}
         </ul>

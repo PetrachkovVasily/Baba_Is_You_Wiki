@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import edit from  '../../../images/edit.png'
 import deleteBtn from  '../../../images/deleteBtn.png';
 
-function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, setSubcategories}) {
+function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, setSubcategories, setVisible, currentUserID}) {
 
     const rootInputClasses = [classes.linkElement];
     const rootCategoryClasses = [classes.categoryTitle];
@@ -24,6 +24,10 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
     }
 
     function editPage() {
+        if (currentUserID == 0) {
+            setVisible(true)
+            return;
+        }
         setEditing(!editing);
     }
 

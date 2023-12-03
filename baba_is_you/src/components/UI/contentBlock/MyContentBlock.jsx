@@ -5,7 +5,7 @@ import historyImg from  '../../../images/history.png';
 import deleteBtn from  '../../../images/deleteBtn.png';
 import { Link, useParams } from "react-router-dom";
 
-function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories, history, setHistory}) {
+function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories, history, setHistory, visible, setVisible, currentUserID}) {
     const {id} = useParams();
     
     const WAS_ADDED = 'was added';
@@ -125,6 +125,10 @@ function MyContentBlock({pages, setPages, paragraphs, setPageContent, categories
     }
     
     function editPage() {
+        if (currentUserID == 0) {
+            setVisible(true)
+            return;
+        }
         setEditing(!editing);
         if (editing == false) {
             changeHistory()

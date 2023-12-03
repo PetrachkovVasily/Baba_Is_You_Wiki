@@ -16,14 +16,14 @@ import MySubCatPage from "./components/UI/subCatPage/MySubCatPage";
 import MyUserPage from "./components/UI/userPage/MyUserPage";
 
 function App() {
-  const [currentUserID, setCurrentUser] = useState(1)
+  const [currentUserID, setCurrentUserID] = useState(0)
 
   const [users, setUsers] = useState([
-    {userId: 1, userName: 'Stepa', password: 'jopa', pages: [1, 2]},
+    {userId: 1, isAuth: false, isBlocked: false, userName: 'Stepa', password: 'jopa', pages: []},
   ])
 
   const [admins, setAdmins] = useState([
-    {adminId: 1, adminName: 'Vasya', password: 'qwerty', users: [1]},
+    {adminId: 1, adminName: 'Vasya', password: 'qwerty', blockedUsers: []},
   ])
   
   const [categories, setCategory] = useState([
@@ -108,7 +108,7 @@ function App() {
       <div className={classes.backImg}></div>
       <div className={classes.bk}>
         <MyModal visible={visible} setVisible={setVisible}>
-          <MyForm visible={visible} setVisible={setVisible} switcher={switcher} setSwitcher={setSwitcher} users={users}/>
+          <MyForm visible={visible} setVisible={setVisible} switcher={switcher} setSwitcher={setSwitcher} users={users} setUsers={setUsers} currentUserID={currentUserID} setCurrentUserID={setCurrentUserID}/>
         </MyModal>
         <MyHeader>
           <div className={classes.catMenu}>
@@ -143,26 +143,40 @@ function App() {
             type='text' 
             placeholder='Search'/>
             <img onClick={handleSearch} src="https://www.svgrepo.com/show/493720/search-magnify-magnifier-glass.svg" alt="search" height={36} width={30} className={classes.searchImg}/>
-          <Link to='user/'>
-            <img onClick={() => {
-              setVisible(!visible);
-            }} src="https://www.svgrepo.com/show/453446/account.svg" height={50} width={50} alt="acc img" className={classes.accImg}/>
-          </Link>
+          {
+            currentUserID == 0 ? (
+                <img onClick={() => {
+                  setVisible(!visible);
+                }} src="https://www.svgrepo.com/show/453446/account.svg" height={50} width={50} alt="acc img" className={classes.accImg}/>
+            ) : (
+              <Link to='user/'>
+                <img src="https://www.svgrepo.com/show/453446/account.svg" height={50} width={50} alt="acc img" className={classes.accImg}/>
+              </Link>
+            )
+          }
         </MyHeader>
 
         <div className={classes.pageBlock}>
           
             <Routes>
-              <Route path="/" element={<MyHomePage isOpen={isOpen} setIsOpen={setIsOpen} categories={categories} setCategory={setCategory} subcategories={subcategories} setSubcategories={setSubcategories}/>}/>
+              <Route path="/" element={
+                <MyHomePage 
+                visible={visible} setVisible={setVisible}
+                isOpen={isOpen} setIsOpen={setIsOpen} 
+                categories={categories} setCategory={setCategory} 
+                subcategories={subcategories} setSubcategories={setSubcategories}
+                currentUserID={currentUserID}/>}/>
               <Route path="subcategory/:subcategoryID" element={
                 <>
                   <MySubCatPage
+                  visible={visible} setVisible={setVisible}
                   setSubcategories={setSubcategories} 
                   subcategories={subcategories} 
                   pages={pages} setPages={setPages} 
                   pageContent={pageContent} setPageContent={setPageContent}
                   comments={comments} setComments={setComments}
-                  history={history} setHistory={setHistory}/>
+                  history={history} setHistory={setHistory}
+                  currentUserID={currentUserID}/>
                 </>
                 }/>
               <Route path="history/:id" element={
@@ -172,14 +186,28 @@ function App() {
                 }/>
               <Route path="content/:id" element={
                 <>
-                  <MyNavbar pages={pages} setPages={setPages} paragraphs={pageContent} users={users} setUsers={setUsers} currentUserID={currentUserID}/>
-                  <MyContentBlock pages={pages} setPages={setPages} paragraphs={pageContent} setPageContent={setPageContent} categories={categories} history={history} setHistory={setHistory}/>
-                  <MyCommentBlock comments={comments} setComments={setComments}/>
+                  <MyNavbar 
+                  pages={pages} setPages={setPages} 
+                  paragraphs={pageContent} 
+                  users={users} setUsers={setUsers} 
+                  currentUserID={currentUserID}
+                  visible={visible} setVisible={setVisible}/>
+                  <MyContentBlock 
+                  currentUserID={currentUserID}
+                  pages={pages} setPages={setPages} 
+                  paragraphs={pageContent} setPageContent={setPageContent} 
+                  categories={categories} 
+                  history={history} setHistory={setHistory}
+                  visible={visible} setVisible={setVisible}/>
+                  <MyCommentBlock 
+                  currentUserID={currentUserID}
+                  comments={comments} setComments={setComments}
+                  visible={visible} setVisible={setVisible}/>
                 </>
               }/>
               <Route path="user/" element={
                 <>
-                  <MyUserPage users={users} setUsers={setUsers} currentUserID={currentUserID} pages={pages}/>
+                  <MyUserPage setCurrentUserID={setCurrentUserID} users={users} setUsers={setUsers} currentUserID={currentUserID} pages={pages}/>
                 </>
               }/>
             </Routes>

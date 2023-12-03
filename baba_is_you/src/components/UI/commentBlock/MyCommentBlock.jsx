@@ -5,7 +5,7 @@ import MyComment from "../comment/MyComment";
 import { useParams } from "react-router-dom";
 
 
-function MyCommentBlock({comments, setComments}) {
+function MyCommentBlock({comments, setComments, setVisible, currentUserID}) {
     const {id} = useParams();
     
 
@@ -16,6 +16,10 @@ function MyCommentBlock({comments, setComments}) {
     }
 
     function addComment(event) {
+        if (currentUserID == 0) {
+            setVisible(true)
+            return;
+        }
         setComments(
             comments.map((page) => {
                 console.log(id)

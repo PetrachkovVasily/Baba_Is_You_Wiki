@@ -6,7 +6,7 @@ import deleteBtn from  '../../../images/deleteBtn.png'
 import { Link, useParams } from "react-router-dom"
 import { useState } from "react";
 
-function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory}) {
+function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory, setVisible, currentUserID}) {
     const {subcategoryID} = useParams()
     console.log(subcategoryID)
 
@@ -27,6 +27,10 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
     }
 
     function editPage() {
+        if (currentUserID == 0) {
+            setVisible(true)
+            return;
+        }
         setEditing(!editing);
     }
 

@@ -2,26 +2,18 @@ import React, { useState } from "react"
 import classes from './MyNavbar.module.css'
 import { useParams } from "react-router-dom";
 
-function MyNavbar({pages, setPages, paragraphs, users, setUsers, currentUserID}) {
+function MyNavbar({pages, setPages, paragraphs, users, setUsers, currentUserID, visible, setVisible}) {
     const {id} = useParams();
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState('Save');
 
     function saveBtn(event) {
-        if (users[users.findIndex(user => user.userId == currentUserID)].pages.includes(parseInt(id))) {
-            setUsers(
-                users.map((user) => {
-                    if (user.userId == currentUserID) {
-                        let currentPages = [...user.pages];
-                        currentPages = currentPages.filter((page) => {
-                            return page != event.target.id;
-                        });
-                        return {...user, pages: currentPages}
-                    } else {
-                        return user;
-                    }
-                })
-            )
-        } else {
+        if (currentUserID == 0) {
+            setVisible(true)
+            return;
+        }
+        if (!users[users.findIndex(user => user.userId == currentUserID)].pages.includes(parseInt(id))) {
+            setIsSaved('Saved')
+            console.log(222)
             setUsers(
                 users.map((user) => {
                     if (user.userId == currentUserID) {
@@ -56,7 +48,7 @@ function MyNavbar({pages, setPages, paragraphs, users, setUsers, currentUserID})
             <a href="#category" className={classes.navTool}>{'Category'}</a>
             <p/> 
             <a href="#comments" className={classes.navTool}>{'Comments'}</a>
-            <h1 id={id} onClick={saveBtn} className={classes.saveBtn}>Save page</h1>
+            <h1 id={id} onClick={saveBtn} className={classes.saveBtn}>{isSaved}</h1>
         </div>
     )
 }
