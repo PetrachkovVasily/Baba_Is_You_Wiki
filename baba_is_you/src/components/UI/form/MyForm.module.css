@@ -50,3 +50,21 @@
     font-size: 18px;
     font-weight: bold;
 }
+
+.errorMessenge {
+    padding: 5px;
+    width: fit-content;
+    margin-left: 75px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    font-size: 18px;
+    border: 0px;
+    color: #ff0000;
+    font-weight: normal;
+}
+
+.errorMessenge.active {
+    
+}

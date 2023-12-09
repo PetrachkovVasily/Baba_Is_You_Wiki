@@ -19,11 +19,7 @@ function App() {
   const [currentUserID, setCurrentUserID] = useState(0)
 
   const [users, setUsers] = useState([
-    {userId: 1, isAuth: false, isBlocked: false, userName: 'Stepa', password: 'jopa', pages: []},
-  ])
-
-  const [admins, setAdmins] = useState([
-    {adminId: 1, adminName: 'Vasya', password: 'qwerty', blockedUsers: []},
+    {userId: 1, isAdmin: true, isAuth: false, isBlocked: false, userName: 'Stepa', password: 'jopa', pages: []},
   ])
   
   const [categories, setCategory] = useState([

@@ -27,6 +27,26 @@ function MyUserPage({users, setUsers, currentUserID, pages, setCurrentUserID}) {
         users[currentIndex].isAuth = false;
         setCurrentUserID(0)
     }
+
+    function bunnUser(event) {
+        setUsers(users.map(user => {
+            if (user.userId == event.target.id) {
+                return {...user, isBlocked: true};
+            } else {
+                return user;
+            }
+        }))
+    }
+
+    function unBunnUser(event) {
+        setUsers(users.map(user => {
+            if (user.userId == event.target.id) {
+                return {...user, isBlocked: false};
+            } else {
+                return user;
+            }
+        }))
+    }
     return (
         <div className={classes.pageBlock}>
             <div className={classes.userBlock}>
@@ -44,12 +64,45 @@ function MyUserPage({users, setUsers, currentUserID, pages, setCurrentUserID}) {
                         return (
                             <li className={classes.linkElement} id={page} key={page}>
                                 <Link className={classes.link} to={`/content/${pages[pages.findIndex(p => p.pageId == page)].pageId}`}>• {pages[pages.findIndex(p => p.pageId == page)].pageName}</Link>
-                                <img key={page} id={page} onClick={handleDelete} src={deleteBtn} width={24} height={24} alt="delete"/>
+                                <img style={{marginLeft: '15px'}} key={page} id={page} onClick={handleDelete} src={deleteBtn} width={24} height={24} alt="delete"/>
                             </li>
                         )
                     })
                 }
             </ul>
+            {
+                users[currentIndex].isAdmin ? (
+                    <>
+                        <h1 className={classes.savedLinks}>Users</h1>
+                        <div className={classes.line}></div>
+                        <ul className={classes.linkList}>
+                        {
+                            users.map(user => {
+                                return (
+                                    <li className={classes.linkElement} id={user.userId} key={user.userId}>
+                                        <li className={classes.link}>{user.userName}</li>
+                                        {
+                                            user.isBlocked ? (
+                                                <button className={classes.banned} key={user.userId} id={user.userId} onClick={unBunnUser}>
+                                                    {'Bunned'}
+                                                </button>   
+                                            ) : (
+                                                <button className={classes.active} key={user.userId} id={user.userId} onClick={bunnUser}>
+                                                    {'Active'}
+                                                </button>   
+                                            )
+                                        }
+                                    </li>
+                                )
+                            })
+                        }
+                        </ul>
+                    </>
+                ) : (
+                    <></>
+                )
+            }
+            
         </div>
     )
 }

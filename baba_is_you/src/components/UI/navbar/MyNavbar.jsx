@@ -12,13 +12,14 @@ function MyNavbar({pages, setPages, paragraphs, users, setUsers, currentUserID, 
             return;
         }
         if (!users[users.findIndex(user => user.userId == currentUserID)].pages.includes(parseInt(id))) {
+            console.log(users[users.findIndex(user => user.userId == currentUserID)].pages)
             setIsSaved('Saved')
             console.log(222)
             setUsers(
                 users.map((user) => {
                     if (user.userId == currentUserID) {
                         let currentPages = [...user.pages];
-                        currentPages = [...currentPages, event.target.id]
+                        currentPages = [...currentPages, parseInt(event.target.id)]
                         return {...user, pages: currentPages}
                     } else {
                         return user;

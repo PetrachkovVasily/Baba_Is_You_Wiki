@@ -4,10 +4,20 @@ import MyInput from "../input/MyInput";
 import MyButton from "../button/MyButton";
 
 function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, setCurrentUserID}) {
+    const rootErrorClasses = [classes.errorMessenge];
+
     const [head, setHead] = useState('LOG IN');
     const [switchBtn, setSwitchBtn] = useState('Sign up');
+    const [errorMessenge, setErrorMessenge] = useState(' ');
+
     const loginInput = (document.getElementById('loginInput'));
     const passwordInput = (document.getElementById('passwordInput'));
+
+    const EXISTED_LOGIN = 'This login is alresdy existed';
+    const NOT_EXISTED_ACCOUNT = 'This login do not exist';
+    const BANNED_ACCOUNT = 'This account was bunned';
+    const WRONG_PASSWORD = 'Wrong password';
+
 
     function handleSwitch() {
         if (switcher) {
@@ -22,12 +32,13 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
 
     function formSender() {
         if (switcher) {
-            
             authUser(loginInput, passwordInput);
         } else {
             addNewUser(loginInput, passwordInput);
         }
-        setVisible(!visible);
+        if (errorMessenge == '') {
+            setVisible(!visible);
+        }
     }
 
     // const [users, setUsers] = useState([
@@ -46,24 +57,34 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
             setUsers(
                 [
                     ...users,
-                    {userId: newID, isAuth: true, isBlocked: false, userName: loginInput.value, password: passwordInput.value, pages: []}
+                    {userId: newID, isAuth: true, isAdmin: false, isBlocked: false, userName: loginInput.value, password: passwordInput.value, pages: []}
                 ]
             )
             setCurrentUserID(newID)
+            setErrorMessenge('');
         } else {
-            alert('This login is alresdy existed')
+            setErrorMessenge(EXISTED_LOGIN);
         }
     }
 
     function authUser(loginInput, passwordInput) {
-        let error = false;
-        users.forEach(user => {
+        users.map(user => {
             if (user.userName == loginInput.value) {
                 if (user.password == passwordInput.value) {
-                    //замена isAuth
+                    if (user.isBlocked) {
+                        setErrorMessenge(BANNED_ACCOUNT);
+                        return user;
+                    }
+                    setCurrentUserID(user.userId);
+                    setErrorMessenge('');
+                    return {...user, isAuth: true};
+                } else {
+                    setErrorMessenge(WRONG_PASSWORD);
+                    return user;
                 }
             } else {
-                return;
+                setErrorMessenge(NOT_EXISTED_ACCOUNT);
+                return user;
             }
             
         })
@@ -84,6 +105,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
             <h1 className={classes.myHead}>{head}</h1>
             <MyInput id='loginInput' className={classes.formInput} placeholder='Login'/>
             <MyInput id='passwordInput' className={classes.formInput} placeholder='Password' type='password'/>
+            <h3 className={rootErrorClasses.join(' ')}>{errorMessenge}</h3>
             <h1 onClick={handleSwitch} className={classes.switchBtn}>
                 /{switchBtn}
             </h1>

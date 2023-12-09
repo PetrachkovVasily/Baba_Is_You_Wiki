@@ -126,7 +126,7 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
                         })
                     }
                 </ul>
-                <button onClick={addPage} className={rootAddClasses.join(' ')}>Add paragraph</button>
+                <button onClick={addPage} className={rootAddClasses.join(' ')}>Add page</button>
             </div>
         </div>
     )
