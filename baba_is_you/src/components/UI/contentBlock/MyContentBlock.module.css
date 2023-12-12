@@ -106,6 +106,7 @@
     border: 0px;
     font-size: 18px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .addBtn.active {

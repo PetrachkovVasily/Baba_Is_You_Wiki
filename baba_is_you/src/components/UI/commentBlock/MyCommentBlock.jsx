@@ -5,7 +5,7 @@ import MyComment from "../comment/MyComment";
 import { useParams } from "react-router-dom";
 
 
-function MyCommentBlock({comments, setComments, setVisible, currentUserID}) {
+function MyCommentBlock({pageComments, setPageComments, comments, setComments, setVisible, currentUserID, users, setUsers}) {
     const {id} = useParams();
     
 
@@ -20,14 +20,16 @@ function MyCommentBlock({comments, setComments, setVisible, currentUserID}) {
             setVisible(true)
             return;
         }
+        const newComment = checkRaduce(pageComments);
+        setPageComments( //добавить шаманство с датой
+            [...pageComments, {userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, commentId: newComment, commentDate: Date.now(), commentText: commText}]
+        )
         setComments(
             comments.map((page) => {
-                console.log(id)
                 if (page.pageId == id) {
                     let currentComments = [...page.pageComments];
                     currentComments = [
-                        ...currentComments,
-                        {userName: 'Current user', commentDate: Date.now(), commentText: commText}
+                        ...currentComments, newComment
                     ]
                     return {...page, pageComments: currentComments}
                 } else {
@@ -35,14 +37,21 @@ function MyCommentBlock({comments, setComments, setVisible, currentUserID}) {
                 }
             })  
         );
-        console.log(comments)
         setCommText('');
     }
+
+    function checkRaduce (content) {
+        if (content?.length > 0)
+            return content?.reduce((previous, current) => previous.paragraphID > current.paragraphID ? previous : current).paragraphID + 1;
+        else
+            return 1;
+    }
+
     return (
         <div id="comments" className={classes.commentBlock}>
             <h1 className={classes.commentH}>Comments</h1>
             <h1 className={classes.commentsNumber}>
-                {comments[comments.findIndex(comment => comment.pageId == id)].pageComments.length} comments
+                {comments[comments?.findIndex(comment => comment.pageId == id)]?.pageComments.length} comments
             </h1>
             <div className={classes.line}></div>
             <div className={classes.comLine}>
@@ -51,11 +60,13 @@ function MyCommentBlock({comments, setComments, setVisible, currentUserID}) {
                 <button onClick={addComment} className={classes.comBtn}>Add comment</button>
             </div>
             {
-                comments[comments.findIndex(comment => comment.pageId == id)].pageComments.map((item) => {
-                    return (
-                      <MyComment comment={item}/>
-                    );
-                  })
+                pageComments?.map((comment) => {
+                    if (comments[comments?.findIndex(page => page.pageId == id)]?.pageComments.includes(comment.commentId)) {
+                        return (
+                        <MyComment key={comment.commentId} comment={comment}/>
+                        );
+                    }
+                })
             }            
         </div>
     )

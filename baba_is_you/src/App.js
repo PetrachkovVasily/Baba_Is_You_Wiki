@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
 import MyHeader from "./components/UI/header/MyHeader";
@@ -15,69 +15,66 @@ import MyHomePage from "./components/UI/homePage/MyHomePage";
 import MySubCatPage from "./components/UI/subCatPage/MySubCatPage";
 import MyUserPage from "./components/UI/userPage/MyUserPage";
 
+import db from "./firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+
 function App() {
+
   const [currentUserID, setCurrentUserID] = useState(0)
 
-  const [users, setUsers] = useState([
-    {userId: 1, isAdmin: true, isAuth: false, isBlocked: false, userName: 'Stepa', password: 'jopa', pages: []},
-  ])
+  const [users, setUsers] = useState([])
   
-  const [categories, setCategory] = useState([
-    {categoryID: 1, name: 'category 3', subcategories: [
-      {name: '32w2', subcategoryID: 32},
-      {name: 'sdsdsdsd', subcategoryID: 33},
-    ]},
-  ])
+  const [categories, setCategory] = useState([])
 
-  const [subcategories, setSubcategories] = useState([
-    {subcategoryID: 32, subcategory: '32w2', pageDescription: 'Sub cut description 32'},
-    {subcategoryID: 33, subcategory: 'sdsdsdsd', pageDescription: 'Sub cut description 32'},
-  ])
+  const [subcategories, setSubcategories] = useState([])
 
-  const [pages , setPages] = useState([
-    {pageId: 1, pageName: 'Name 1', subcategoryID: 32, pageDescription: 'description 1',},
-    {pageId: 2, pageName: 'Name 2', subcategoryID: 33, pageDescription: 'description 2',},
-  ])
+  const [pages , setPages] = useState([])
 
-  const [pageContent, setPageContent] = useState([
-    {pageId: 1, content: [
-      {paragraphID: 1, paragraphName: 'p 1', description: 'description 1'},
-      {paragraphID: 2, paragraphName: 'p 2', description: '...'},
-      {paragraphID: 3, paragraphName: 'p 3', description: 'description 1'},
-      {paragraphID: 4, paragraphName: 'p 4', description: 'description 3'},
-    ]},
-    {pageId: 2, content: [
-      {paragraphID: 1, paragraphName: 'p 1', description: 'description 2'},
-      {paragraphID: 2, paragraphName: 'p 2', description: ''},
-      {paragraphID: 3, paragraphName: 'p 3', description: 'description 2'},
-    ]},
-  ])
+  const [content, setContent] = useState([])
 
-  const [comments, setComments] = useState([
-    {pageId: 1, pageComments: [
-      {userName: 'Current user', commentDate: Date.now(), commentText: 'text 1'},
-      {userName: 'other Current user', commentDate: Date.now(), commentText: 'text 2'},
-      {userName: 'other other Current user', commentDate: Date.now(), commentText: 'text 3'},
-    ]},
-    {pageId: 2, pageComments: [
-      {userName: 'other Current user', commentDate: new Date(), commentText: 'text 4'},
-    ]},
-  ])
+  const [pageContent, setPageContent] = useState([])
 
-  const [history, setHistory] = useState([
-    {pageId: 1, pageHistory: [
-        {userName: 'Current user', dateOfChange: Date.now(), changes: [
-              'Blablabla paragraph was added',
-              'Blablabla paragraph was deleted',
-              'Blablabla paragraph description was changed',
-              'Blablabla paragraph name was changed',
-        ]},
-        {userName: 'other Current user', dateOfChange: Date.now(), changes: [
-          'Blablabla paragraph was added',
-          'Blablabla paragraph name was changed',
-        ]},
-    ]},
-  ])
+  const [comments, setComments] = useState([])
+
+  const [pageComments, setPageComments] = useState([])
+
+  const [history, setHistory] = useState([])
+
+  const [pageHistory, setPageHistory] = useState([])
+
+  useEffect(() => {
+    onSnapshot(collection(db, "pageHistory"), (snapshot) => {
+      setPageHistory(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "history"), (snapshot) => {
+      setHistory(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "pageComments"), (snapshot) => {
+      setPageComments(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "comments"), (snapshot) => {
+      setComments(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "content"), (snapshot) => {
+      setContent(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "pageContent"), (snapshot) => {
+      setPageContent(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "categories"), (snapshot) => {
+      setCategory(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "subcategories"), (snapshot) => {
+      setSubcategories(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "users"), (snapshot) => {
+      setUsers(snapshot.docs.map(doc => doc.data()))
+    });
+    onSnapshot(collection(db, "pages"), (snapshot) => {
+      setPages(snapshot.docs.map(doc => doc.data()))
+    });
+    }, [])
 
   const [inputBody, setInputBody] = useState('');
 
@@ -90,7 +87,6 @@ function App() {
   const [visible, setVisible] = useState(false);
 
   let [switcher, setSwitcher] = useState(true);
-
   
   useEffect(() => {
     setIsOpen([...categories.map(cat => {
@@ -126,7 +122,7 @@ function App() {
                         }}>
                         {cat.name}
                       </MyButton>
-                      <MyListMenu id={cat.categoryID} isOpen={cat.open} setIsOpen={setIsOpen} category={categories[categories.findIndex(category => category.categoryID == cat.categoryID)]}/>
+                      <MyListMenu subcategories={subcategories} id={cat.categoryID} isOpen={cat.open} setIsOpen={setIsOpen} category={categories[categories.findIndex(category => category.categoryID == cat.categoryID)]}/>
                       </div>
                     )
                 })
@@ -177,7 +173,7 @@ function App() {
                 }/>
               <Route path="history/:id" element={
                 <>
-                  <MyHistory history={history} pages={pages} />
+                  <MyHistory pageHistory={pageHistory} setPageHistory={setPageHistory} history={history} pages={pages} />
                 </>
                 }/>
               <Route path="content/:id" element={
@@ -185,19 +181,25 @@ function App() {
                   <MyNavbar 
                   pages={pages} setPages={setPages} 
                   paragraphs={pageContent} 
+                  content={content} setContent={setContent}
                   users={users} setUsers={setUsers} 
                   currentUserID={currentUserID}
                   visible={visible} setVisible={setVisible}/>
                   <MyContentBlock 
+                  users={users}
                   currentUserID={currentUserID}
                   pages={pages} setPages={setPages} 
+                  content={content} setContent={setContent}
                   paragraphs={pageContent} setPageContent={setPageContent} 
                   categories={categories} 
                   history={history} setHistory={setHistory}
+                  pageHistory={pageHistory} setPageHistory={setPageHistory}
                   visible={visible} setVisible={setVisible}/>
                   <MyCommentBlock 
                   currentUserID={currentUserID}
+                  pageComments={pageComments} setPageComments={setPageComments}
                   comments={comments} setComments={setComments}
+                  users={users} setUsers={setUsers} 
                   visible={visible} setVisible={setVisible}/>
                 </>
               }/>

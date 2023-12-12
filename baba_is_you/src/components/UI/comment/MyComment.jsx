@@ -3,16 +3,14 @@ import classes from './MyComment.module.css'
 import logo from  '../../../images/accountlogo.png'
 
 function MyComment({comment}) {
-    let date = new Date(comment.commentDate);
-    let options = { weekday: 'long', day: 'numeric', year: 'numeric', month: 'long' };
-
+    console.log(comment.commentDate.toDate().toDateString())
     return (
         <div>
             <div className={classes.commentName}>
                 <img src={logo} width={60} height={60} alt="User icon"/>
                 <div className={classes.comHead}>
                     <h1 className={classes.userName}>{comment.userName}</h1>
-                    <h4 className={classes.commentDate}>{date.toLocaleString()}</h4>
+                    <h4 className={classes.commentDate}>{comment.commentDate.toDate().toDateString()}</h4>
                 </div>
             </div>
             <div style={{marginLeft: '90px', marginTop: '0px', fontSize: '18px', width: '540px'}}>

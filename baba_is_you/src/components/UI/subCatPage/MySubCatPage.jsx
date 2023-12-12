@@ -8,7 +8,6 @@ import { useState } from "react";
 
 function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageContent, setPageContent, comments, setComments, history, setHistory, setVisible, currentUserID}) {
     const {subcategoryID} = useParams()
-    console.log(subcategoryID)
 
     const rootAreaClasses = [classes.description];
     const rootInputClasses = [classes.linkElement];
@@ -36,7 +35,7 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
 
     function changePageDescription(event) {
         setSubcategories(
-            subcategories.map((page) => {
+            subcategories?.map((page) => {
                 if (page.subcategoryID == (subcategoryID)) {
                     return {...page , pageDescription: event.target.value};
                 } else {
@@ -46,7 +45,7 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
         );
     }
     
-    function addPage() {
+    function addPage() { //ооооооооооооооооочень важно, разделить на объекты
         setPages(
             [...pages, {pageId: setPageID(pages), pageName: 'Page name', subcategoryID: subcategoryID, pageDescription: 'add description',}]
         )
@@ -62,7 +61,11 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
     }
 
     function setPageID (pages) {
-       return pages.reduce((previous, current) => previous.pageId > current.pageId ? previous : current).pageId + 1;
+        if (pages.length > 0) {
+            return pages.reduce((previous, current) => previous.pageId > current.pageId ? previous : current).pageId + 1;
+        } else {
+            return 1;
+        }
     }
 
     function changePageName(event) {
@@ -97,7 +100,7 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
         <div className={classes.pageBlock}>
             <div className={classes.title}>
                     <h1 className={classes.pageH} style={{color: '#F34A91'}}>
-                        {subcategories[subcategories.findIndex(page => page.subcategoryID == subcategoryID)].subcategory}
+                        {subcategories[subcategories?.findIndex(page => page.subcategoryID == subcategoryID)]?.subcategory}
                     </h1>
                     <div style={{margin: 0, padding: 0, marginRight: '30px', display: 'flex'}}>
                         <div onClick={editPage} style={{cursor: 'pointer', margin: 0, marginRight: '15px', padding: 0, display: "flex"}}>
@@ -106,7 +109,7 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
                         </div>
                     </div>
             </div>                    
-            <textarea disabled={editing} value={subcategories[subcategories.findIndex(page => page.subcategoryID == subcategoryID)].pageDescription} onChange={changePageDescription} className={rootAreaClasses.join(' ')}></textarea>
+            <textarea disabled={editing} value={subcategories[subcategories?.findIndex(page => page.subcategoryID == subcategoryID)]?.pageDescription} onChange={changePageDescription} className={rootAreaClasses.join(' ')}></textarea>
 
             <div>
                 <div className={classes.titleDiv}>

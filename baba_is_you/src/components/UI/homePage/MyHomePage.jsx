@@ -34,36 +34,21 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
     function editLink (editing, subcategory) {
         if (editing) {
             return (
-                <Link id={subcategory.subcategoryID} to={`/subcategory/${subcategory.subcategoryID}`} className={classes.link}>
-                    <h1 className={rootInputClasses.join(' ')} id={subcategory.subcategoryID}>
-                        {subcategory.name}
+                <Link id={subcategory} to={`/subcategory/${subcategory}`} className={classes.link}>
+                    <h1 className={rootInputClasses.join(' ')} id={subcategory}>
+                        {subcategories[subcategories.findIndex(subcat => subcat.subcategoryID == subcategory)]?.subcategory}
                     </h1>
                 </Link>
             ) 
         } else {
                 return (
-                    <input className={classes.linkInput} onChange={changeSubcutegoryName} id={subcategory.subcategoryID} value={subcategory.name}></input>
+                    <input className={classes.linkInput} onChange={changeSubcutegoryName} id={subcategory} value={subcategories[subcategories.findIndex(subcat => subcat.subcategoryID == subcategory)]?.subcategory}></input>
                 )
             }
     }
     
     function changeSubcutegoryName(event) {
         const currentName = event.target.value;
-        setCategory(
-            categories.map(cat => {
-                if (cat.categoryID == event.target.parentNode.parentNode.id) {
-                    let currentSubcat = [...cat.subcategories];
-                    currentSubcat.map(subcat => {
-                        if (subcat.subcategoryID == event.target.id) {
-                            subcat.name = currentName;
-                        }
-                    })
-                    return {...cat, subcategories: cat.subcategories}
-                } else {
-                    return cat;
-                }
-            })
-        )
         setSubcategories(
             subcategories.map((subcat) => {
                 if (subcat.subcategoryID == (event.target.id)) {
@@ -93,8 +78,7 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
                     let current = [...category.subcategories];
                     current = [
                         ...current,
-                        {subcategoryID: setSubcategoryID(subcategories), 
-                        name: 'subcategory name'}
+                        setSubcategoryID(subcategories)
                     ]
                     return {...category, subcategories: current}
                 } else {
@@ -159,16 +143,16 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
                 categories.map((category) => {
                     return (
                         <>
-                            <div key={category.categoryID}>
+                            <div  id={category.categoryID} key={category.categoryID}>
                                 <div className={classes.titleDiv}>
                                     <input id={category.categoryID} onChange={changeCategoryName} value={category.name} className={rootCategoryClasses.join(' ')}></input>
                                 </div>
                                 <div className={classes.line}></div>
-                                <ul key={category.categoryID} id={category.categoryID} className={classes.categoryList}>
+                                <ul id={category.categoryID} className={classes.categoryList}>
                                     {
                                         category.subcategories.map(subcategory => {
                                             return (
-                                                <li key={subcategory.subcategoryID} id={subcategory.subcategoryID} className={classes.subcatElement}>{editLink(editing, subcategory)}</li>
+                                                <li key={subcategory} id={subcategory} className={classes.subcatElement}>{editLink(editing, subcategory)}</li>
                                             )
                                         })
                                     }

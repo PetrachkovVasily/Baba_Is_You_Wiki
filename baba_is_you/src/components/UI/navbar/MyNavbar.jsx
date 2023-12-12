@@ -1,25 +1,49 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import classes from './MyNavbar.module.css'
 import { useParams } from "react-router-dom";
 
-function MyNavbar({pages, setPages, paragraphs, users, setUsers, currentUserID, visible, setVisible}) {
+function MyNavbar({content, setContent, pages, setPages, paragraphs, users, setUsers, currentUserID, visible, setVisible}) {
     const {id} = useParams();
     const [isSaved, setIsSaved] = useState('Save');
+
+    function saveState() {
+       
+    }
+
+    useEffect(() => {
+        if (users[users?.findIndex(user => user.userId == currentUserID)]?.pages.includes(parseInt(id))) {
+            setIsSaved('Saved')
+        } 
+    }, [])
+    saveState()
 
     function saveBtn(event) {
         if (currentUserID == 0) {
             setVisible(true)
             return;
         }
-        if (!users[users.findIndex(user => user.userId == currentUserID)].pages.includes(parseInt(id))) {
-            console.log(users[users.findIndex(user => user.userId == currentUserID)].pages)
+        if (!users[users?.findIndex(user => user.userId == currentUserID)]?.pages.includes(parseInt(id))) {
             setIsSaved('Saved')
-            console.log(222)
+            setUsers(
+                users?.map((user) => {
+                    if (user.userId == currentUserID) {
+                        let currentPages = [...user.pages];
+                        currentPages = [...currentPages, parseInt(event.target.id)]
+                        return {...user, pages: currentPages}
+                    } else {
+                        return user;
+                    }
+                })
+            )
+        } else {
+            setIsSaved('Save')
             setUsers(
                 users.map((user) => {
                     if (user.userId == currentUserID) {
                         let currentPages = [...user.pages];
-                        currentPages = [...currentPages, parseInt(event.target.id)]
+                        currentPages = currentPages.filter((page) => {
+                            return page != event.target.id;
+                        });
                         return {...user, pages: currentPages}
                     } else {
                         return user;
@@ -32,16 +56,18 @@ function MyNavbar({pages, setPages, paragraphs, users, setUsers, currentUserID, 
 
     return (
         <div className={classes.navbar}>
-            <a href="#pageTitle" className={classes.navTool}>{pages[pages.findIndex(page => page.pageId == id)].pageName}</a>
+            <a href="#pageTitle" className={classes.navTool}>{pages[pages?.findIndex(page => page.pageId == id)]?.pageName}</a>
             <div className={classes.toolBlock}>
                 {
-                    paragraphs[pages.findIndex(page => page.pageId == id)].content.map((item) => {
-                        return (
-                            <>
-                                <a href={'#' + item.paragraphID} className={classes.pTool}>{item.paragraphName}</a>
-                                <p/>
-                            </>
-                        );
+                    content.map((paragraph) => {
+                        if (paragraphs[pages?.findIndex(page => page.pageId == id)]?.content.includes(paragraph.paragraphID)) {
+                            return (
+                                       <div key={paragraph.paragraphID} style={{margin: 0, padding: 0}}>
+                                            <a href={'#' + paragraph.paragraphID} className={classes.pTool}>{paragraph.paragraphName}</a>
+                                            <p/>
+                                        </div> 
+                                    )
+                        }
                     })
                 }
                 

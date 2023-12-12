@@ -8,7 +8,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
 
     const [head, setHead] = useState('LOG IN');
     const [switchBtn, setSwitchBtn] = useState('Sign up');
-    const [errorMessenge, setErrorMessenge] = useState(' ');
+    let [errorMessenge, setErrorMessenge] = useState(null);
 
     const loginInput = (document.getElementById('loginInput'));
     const passwordInput = (document.getElementById('passwordInput'));
@@ -62,6 +62,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
             )
             setCurrentUserID(newID)
             setErrorMessenge('');
+            errorMessenge = '';
         } else {
             setErrorMessenge(EXISTED_LOGIN);
         }
@@ -77,6 +78,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
                     }
                     setCurrentUserID(user.userId);
                     setErrorMessenge('');
+                    errorMessenge = '';
                     return {...user, isAuth: true};
                 } else {
                     setErrorMessenge(WRONG_PASSWORD);
@@ -97,8 +99,6 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
             return 1;
         }
     }
-
-    console.log(users)
 
     return (
         <div className={classes.myForm}>
