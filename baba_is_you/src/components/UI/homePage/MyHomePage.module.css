@@ -3,12 +3,19 @@
 * {
     font-family: 'Amatic SC', sans-serif;
 } */
+
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Roboto:wght@300&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
 .pageBlock {
     background-color: #222222;
     margin: 0;
     padding-left: 45px;
     padding-top: 45px;
     padding-bottom: 30px;
+    opacity: 0.98;
 }
 
 .pageTitle {
@@ -131,4 +138,37 @@
 .addBtn.active {
     visibility: hidden;
     display: none;
+}
+
+.description {
+    text-align: center;
+    max-width: 810px;
+    min-width: 810px;
+    color: #ffffff;
+    background-color: #222222;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 0;
+    font-size: 18px;
+}
+
+.description.active {
+    resize: none;
+    border: none;
+}
+
+.wiki {
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 75px;
+    margin: 0;
+    font-family: 'Amatic SC', sans-serif;
+    background-color: #222222;
+    border: 1px solid;
+    border-color: #a6a6a6;
+}
+
+.wiki.active {
+    border: none;
 }

@@ -105,8 +105,6 @@ function MySubCatPage({subcategories, setSubcategories, pages, setPages, pageCon
 
                     const docRef = doc(db, 'pages', page.pageId.toString());
                     const payload = {...page, pageName: event.target.value};
-                    console.log(payload)
-                    console.log(event.target.value)
                     setDoc(docRef, payload);
 
                     return {...page, pageName: event.target.value};

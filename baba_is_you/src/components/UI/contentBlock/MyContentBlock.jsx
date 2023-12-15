@@ -9,7 +9,7 @@ import { doc, setDoc } from "firebase/firestore";
 import db from "../../../firebase";
 
 
-function MyContentBlock({users, pageHistory, setPageHistory, content, setContent, pages, setPages, paragraphs, pageContent, setPageContent, categories, history, setHistory, visible, setVisible, currentUserID}) {
+function MyContentBlock({subcategories, users, pageHistory, setPageHistory, content, setContent, pages, setPages, paragraphs, pageContent, setPageContent, categories, history, setHistory, visible, setVisible, currentUserID}) {
     const {id} = useParams();
     
     const WAS_ADDED = 'was added';
@@ -43,9 +43,9 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
     function findCategory(categories) {
         categories?.forEach(item => {
             item.subcategories.forEach(subcat => {
-                if (subcat.subcategoryID == pages[pages?.findIndex(page => page.pageId == id)]?.subcategoryID) {
-                    currentCategory = item;
-                    currentSubCategory = subcat;
+                if (subcat == pages[pages?.findIndex(page => page.pageId == id)]?.subcategoryID) {
+                    currentCategory = item.name;
+                    currentSubCategory = subcategories[subcategories?.findIndex(sub => sub.subcategoryID == subcat)].subcategory;
                 }
             });
         });
@@ -294,7 +294,7 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                 
                 <h1 id="category" className={classes.pageH1}>Category</h1>
                 <h4 className={classes.pageCat}>
-                    {pages[pages?.findIndex(page => page.pageId == id)]?.pageName}/{currentCategory.name}/{currentSubCategory.name}
+                    {pages[pages?.findIndex(page => page.pageId == id)]?.pageName}/{currentCategory}/{currentSubCategory}
                 </h4>
             </div>
         </div>

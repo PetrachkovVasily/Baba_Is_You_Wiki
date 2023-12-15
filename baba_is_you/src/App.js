@@ -43,7 +43,12 @@ function App() {
 
   const [pageHistory, setPageHistory] = useState([])
 
+  const [wiki, setWiki] = useState([])
+
   useEffect(() => {
+    onSnapshot(collection(db, "wiki"), (snapshot) => {
+      setWiki(snapshot.docs.map(doc => doc.data()))
+    });
     onSnapshot(collection(db, "pageHistory"), (snapshot) => {
       setPageHistory(snapshot.docs.map(doc => doc.data()))
     });
@@ -89,7 +94,7 @@ function App() {
   let [switcher, setSwitcher] = useState(true);
   
   useEffect(() => {
-    setIsOpen([...categories.map(cat => {
+    setIsOpen([...categories?.map(cat => {
       return {categoryID: cat.categoryID, name: cat.name, open: true}
     })])
   }, [categories])
@@ -102,10 +107,10 @@ function App() {
         <MyModal visible={visible} setVisible={setVisible}>
           <MyForm visible={visible} setVisible={setVisible} switcher={switcher} setSwitcher={setSwitcher} users={users} setUsers={setUsers} currentUserID={currentUserID} setCurrentUserID={setCurrentUserID}/>
         </MyModal>
-        <MyHeader>
+        <MyHeader wikiName={wiki[0]?.wikiName}>
           <div className={classes.catMenu}>
             {
-                isOpen.map((cat) => {
+                isOpen?.map((cat) => {
                     return (
                       <div key={cat.categoryID}>
                       <MyButton id={cat.categoryID} onClick={(e) => {
@@ -122,19 +127,12 @@ function App() {
                         }}>
                         {cat.name}
                       </MyButton>
-                      <MyListMenu subcategories={subcategories} id={cat.categoryID} isOpen={cat.open} setIsOpen={setIsOpen} category={categories[categories.findIndex(category => category.categoryID == cat.categoryID)]}/>
+                      <MyListMenu subcategories={subcategories} id={cat.categoryID} isOpen={cat.open} setIsOpen={setIsOpen} category={categories[categories?.findIndex(category => category.categoryID == cat.categoryID)]}/>
                       </div>
                     )
                 })
             }
           </div>
-
-          <MyInput 
-            value={inputBody} 
-            onChange={event => setInputBody(event.target.value)} 
-            type='text' 
-            placeholder='Search'/>
-            <img onClick={handleSearch} src="https://www.svgrepo.com/show/493720/search-magnify-magnifier-glass.svg" alt="search" height={36} width={30} className={classes.searchImg}/>
           {
             currentUserID == 0 ? (
                 <img onClick={() => {
@@ -153,6 +151,7 @@ function App() {
             <Routes>
               <Route path="/" element={
                 <MyHomePage 
+                wiki={wiki} setWiki={setWiki}
                 visible={visible} setVisible={setVisible}
                 isOpen={isOpen} setIsOpen={setIsOpen} 
                 categories={categories} setCategory={setCategory} 
@@ -186,6 +185,7 @@ function App() {
                   currentUserID={currentUserID}
                   visible={visible} setVisible={setVisible}/>
                   <MyContentBlock 
+                  subcategories={subcategories}
                   users={users}
                   currentUserID={currentUserID}
                   pages={pages} setPages={setPages} 
