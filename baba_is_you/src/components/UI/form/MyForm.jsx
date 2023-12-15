@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import classes from './MyForm.module.css'
 import MyInput from "../input/MyInput";
 import MyButton from "../button/MyButton";
+import { doc, setDoc } from "firebase/firestore";
+import db from "../../../firebase";
 
 function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, setCurrentUserID}) {
     const rootErrorClasses = [classes.errorMessenge];
@@ -41,11 +43,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
         }
     }
 
-    // const [users, setUsers] = useState([
-    //     {userId: 1, isAuth: false, isBlocked: false, userName: 'Stepa', password: 'jopa', pages: []},
-    // ])
-
-    function addNewUser(loginInput, passwordInput) {
+    async function addNewUser(loginInput, passwordInput) {
         let error = false;
         users.forEach(user => {
             if (user.userName == loginInput.value)
@@ -61,6 +59,11 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
                 ]
             )
             setCurrentUserID(newID)
+
+            const docRef = doc(db, 'users', newID.toString());
+            const payload = {userId: newID, isAuth: true, isAdmin: false, isBlocked: false, userName: loginInput.value, password: passwordInput.value, pages: []};
+            setDoc(docRef, payload);
+
             setErrorMessenge('');
             errorMessenge = '';
         } else {
@@ -93,8 +96,8 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
     }
 
     function setUserId (users) {
-        if (users.length > 0) {
-            return users.reduce((previous, current) => previous.userId > current.userId ? previous : current).userId + 1;
+        if (users?.length > 0) {
+            return users?.reduce((previous, current) => previous.userId > current.userId ? previous : current).userId + 1;
         } else {
             return 1;
         }

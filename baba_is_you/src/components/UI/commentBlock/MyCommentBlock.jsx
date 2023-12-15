@@ -3,6 +3,9 @@ import classes from './MyCommentBlock.module.css'
 import logo from  '../../../images/accountlogo.png'
 import MyComment from "../comment/MyComment";
 import { useParams } from "react-router-dom";
+import { Timestamp } from 'firebase/firestore'
+import { doc, setDoc } from "firebase/firestore";
+import db from "../../../firebase";
 
 
 function MyCommentBlock({pageComments, setPageComments, comments, setComments, setVisible, currentUserID, users, setUsers}) {
@@ -20,10 +23,17 @@ function MyCommentBlock({pageComments, setPageComments, comments, setComments, s
             setVisible(true)
             return;
         }
-        const newComment = checkRaduce(pageComments);
+        const newComment = checkComm(pageComments);
         setPageComments( //добавить шаманство с датой
-            [...pageComments, {userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, commentId: newComment, commentDate: Date.now(), commentText: commText}]
+            [...pageComments, {userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, commentId: newComment, commentDate: Timestamp.fromDate(new Date()), commentText: commText}]
         )
+
+        const pageCommentsdocRef = doc(db, 'pageComments', newComment.toString());
+        const pageCommentspayload = {userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, 
+                                    commentId: newComment, 
+                                    commentDate: Timestamp.fromDate(new Date()), commentText: commText};
+        setDoc(pageCommentsdocRef, pageCommentspayload);
+
         setComments(
             comments.map((page) => {
                 if (page.pageId == id) {
@@ -31,6 +41,10 @@ function MyCommentBlock({pageComments, setPageComments, comments, setComments, s
                     currentComments = [
                         ...currentComments, newComment
                     ]
+                    console.log(newComment)
+                    const commentsdocRef = doc(db, 'comments', page.pageId.toString());
+                    const commentspayload = {...page, pageComments: currentComments};
+                    setDoc(commentsdocRef, commentspayload);
                     return {...page, pageComments: currentComments}
                 } else {
                     return page;
@@ -38,6 +52,13 @@ function MyCommentBlock({pageComments, setPageComments, comments, setComments, s
             })  
         );
         setCommText('');
+    }
+
+    function checkComm (pageComments) {
+        if (pageComments?.length >= 0)
+            return pageComments?.reduce((previous, current) => previous.paragraphID > current.paragraphID ? previous : current).commentId + 1;
+        else
+            return 1;
     }
 
     function checkRaduce (content) {

@@ -3,7 +3,7 @@ import classes from './MyComment.module.css'
 import logo from  '../../../images/accountlogo.png'
 
 function MyComment({comment}) {
-    console.log(comment.commentDate.toDate().toDateString())
+    //console.log(comment.commentDate.toDate().toDateString())
     return (
         <div>
             <div className={classes.commentName}>

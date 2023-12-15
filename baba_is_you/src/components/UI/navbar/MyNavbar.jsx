@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import classes from './MyNavbar.module.css'
 import { useParams } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
+import db from "../../../firebase";
 
 function MyNavbar({content, setContent, pages, setPages, paragraphs, users, setUsers, currentUserID, visible, setVisible}) {
     const {id} = useParams();
@@ -17,7 +19,7 @@ function MyNavbar({content, setContent, pages, setPages, paragraphs, users, setU
     }, [])
     saveState()
 
-    function saveBtn(event) {
+    async function saveBtn(event) {
         if (currentUserID == 0) {
             setVisible(true)
             return;
@@ -29,6 +31,11 @@ function MyNavbar({content, setContent, pages, setPages, paragraphs, users, setU
                     if (user.userId == currentUserID) {
                         let currentPages = [...user.pages];
                         currentPages = [...currentPages, parseInt(event.target.id)]
+
+                        const docRef = doc(db, 'users', user.userId.toString());
+                        const payload = {...user, pages: currentPages};
+                        setDoc(docRef, payload);
+
                         return {...user, pages: currentPages}
                     } else {
                         return user;
@@ -44,6 +51,11 @@ function MyNavbar({content, setContent, pages, setPages, paragraphs, users, setU
                         currentPages = currentPages.filter((page) => {
                             return page != event.target.id;
                         });
+
+                        const docRef = doc(db, 'users', user.userId.toString());
+                        const payload = {...user, pages: currentPages};
+                        setDoc(docRef, payload);
+
                         return {...user, pages: currentPages}
                     } else {
                         return user;
@@ -59,7 +71,7 @@ function MyNavbar({content, setContent, pages, setPages, paragraphs, users, setU
             <a href="#pageTitle" className={classes.navTool}>{pages[pages?.findIndex(page => page.pageId == id)]?.pageName}</a>
             <div className={classes.toolBlock}>
                 {
-                    content.map((paragraph) => {
+                    content?.map((paragraph) => {
                         if (paragraphs[pages?.findIndex(page => page.pageId == id)]?.content.includes(paragraph.paragraphID)) {
                             return (
                                        <div key={paragraph.paragraphID} style={{margin: 0, padding: 0}}>

@@ -118,3 +118,17 @@
     border: 1px solid;
     border-color: #a6a6a6;
 }
+
+.delBtn {
+    cursor: 'pointer';
+    margin: 0;
+    margin-bottom: 0; 
+    margin-right: '45px';
+    margin-top: '30px';
+    padding: 0;
+    display: "flex";
+}
+
+.delBtn.active {
+    visibility: hidden;
+}

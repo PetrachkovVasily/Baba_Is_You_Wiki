@@ -4,8 +4,12 @@ import edit from  '../../../images/edit.png';
 import historyImg from  '../../../images/history.png';
 import deleteBtn from  '../../../images/deleteBtn.png';
 import { Link, useParams } from "react-router-dom";
+import { Timestamp, deleteDoc } from 'firebase/firestore'
+import { doc, setDoc } from "firebase/firestore";
+import db from "../../../firebase";
 
-function MyContentBlock({users, pageHistory, setPageHistory, content, setContent, pages, setPages, paragraphs, setPageContent, categories, history, setHistory, visible, setVisible, currentUserID}) {
+
+function MyContentBlock({users, pageHistory, setPageHistory, content, setContent, pages, setPages, paragraphs, pageContent, setPageContent, categories, history, setHistory, visible, setVisible, currentUserID}) {
     const {id} = useParams();
     
     const WAS_ADDED = 'was added';
@@ -55,6 +59,11 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                     if (!currentChanges.includes(page.pageName + ' ' + DESCRIPTION + ' ' + WAS_CHANGED)) {
                         setCurrentChanges([...currentChanges, page.pageName + ' ' + DESCRIPTION + ' ' + WAS_CHANGED]);
                      }
+
+                    const pagedocRef = doc(db, 'pages', page.pageId.toString());
+                    const pagepayload = {...page , pageDescription: event.target.value};
+                    setDoc(pagedocRef, pagepayload);
+
                     return {...page , pageDescription: event.target.value};
                 } else {
                     return page;
@@ -71,6 +80,11 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                     if (!currentChanges.includes(paragraph.paragraphName + ' ' + DESCRIPTION + ' ' + WAS_CHANGED)) {
                         setCurrentChanges([...currentChanges, paragraph.paragraphName + ' ' + DESCRIPTION + ' ' + WAS_CHANGED]);
                      }
+
+                     const docRef = doc(db, 'content', paragraph.paragraphID.toString());
+                     const payload = {...paragraph, description: event.target.value};
+                     setDoc(docRef, payload);
+
                     return {...paragraph, description: event.target.value}
                 } else {
                     return paragraph;
@@ -85,9 +99,17 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
             [...pageHistory, 
                 {historyId: newHistoryId,
                 userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, 
-                dateOfChange: Date.now(), 
+                dateOfChange: Timestamp.fromDate(new Date()), 
                 changes: currentChanges}]
         )
+
+        const pageHistorydocRef = doc(db, 'pageHistory', newHistoryId.toString());
+        const pageHistorypayload = {historyId: newHistoryId,
+                                    userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, 
+                                    dateOfChange: Timestamp.fromDate(new Date()), 
+                                    changes: currentChanges};
+        setDoc(pageHistorydocRef, pageHistorypayload);
+
         setHistory(
             history?.map((page) => {
                 if (page.pageId == id) {
@@ -96,6 +118,11 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                         ...currentHistory,
                         newHistoryId
                     ]
+
+                    const historydocRef = doc(db, 'history', page.pageId.toString());
+                    const historypayload = {...page, pageHistory: currentHistory};
+                    setDoc(historydocRef, historypayload);
+
                     return {...page, pageHistory: currentHistory}
                 } else {
                     return page;
@@ -119,6 +146,11 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                     if (!currentChanges.includes(paragraph.paragraphName + ' ' + TITLE + ' ' + WAS_CHANGED)) {
                         setCurrentChanges([...currentChanges, paragraph.paragraphName + ' ' + TITLE + ' ' + WAS_CHANGED]);
                     }
+
+                    const docRef = doc(db, 'content', paragraph.paragraphID.toString());
+                    const payload = {...paragraph, paragraphName: event.target.value};
+                    setDoc(docRef, payload);
+
                     return {...paragraph, paragraphName: event.target.value}
                 } else {
                     return paragraph;
@@ -148,6 +180,10 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                 return paragraph.paragraphID != event.target.id;
              })
         )
+
+        const docRef = doc(db, 'content', event.target.id);
+        deleteDoc(docRef);
+
         setPageContent(
             paragraphs?.map((page) => {
                 if (page.pageId == id) {
@@ -155,6 +191,11 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                     currentContent = currentContent.filter((paragraph) => {
                        return paragraph != event.target.id;
                     });
+
+                    const docRef = doc(db, 'pageContent', page.pageId.toString());
+                    const payload = {...page, content: currentContent};
+                    setDoc(docRef, payload);
+
                     return {...page, content: currentContent}
                 } else {
                     return page;
@@ -177,6 +218,14 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                 paragraphName: 'Paragraph name', 
                 description: 'paragraph description'}]
         )
+
+        const contentdocRef = doc(db, 'content', newParagraph.toString());
+        const contentpayload = {paragraphID: newParagraph,
+            paragraphName: 'Paragraph name', 
+            description: 'paragraph description'};
+        setDoc(contentdocRef, contentpayload);
+
+
         setPageContent(
             paragraphs?.map((page) => {
                 if (page.pageId == id) {
@@ -188,6 +237,11 @@ function MyContentBlock({users, pageHistory, setPageHistory, content, setContent
                     if (!currentChanges.includes(PARAGRAPH + ' ' + WAS_ADDED)) {
                         setCurrentChanges([...currentChanges, PARAGRAPH + ' ' + WAS_ADDED]); //изменить позже
                     }
+
+                    const paragraphsdocRef = doc(db, 'pageContent', page.pageId.toString());
+                    const paragraphspayload = {...page, content: currentContent};
+                    setDoc(paragraphsdocRef, paragraphspayload);
+
                     return {...page, content: currentContent}
                 } else {
                     return page;

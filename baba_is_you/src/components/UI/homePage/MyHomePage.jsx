@@ -3,6 +3,9 @@ import classes from "./MyHomePage.module.css"
 import { Link } from "react-router-dom";
 import edit from  '../../../images/edit.png'
 import deleteBtn from  '../../../images/deleteBtn.png';
+import { doc, setDoc } from "firebase/firestore";
+import db from "../../../firebase";
+
 
 function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, setSubcategories, setVisible, currentUserID}) {
 
@@ -16,6 +19,7 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
 
     if (editing) {
         rootDeleteClasses.push(classes.active);
+        rootInputClasses.push(classes.active);
         rootCategoryClasses.push(classes.active);
         rootAddClasses.push(classes.active);
         editBtn = 'Edit';
@@ -52,6 +56,11 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
         setSubcategories(
             subcategories.map((subcat) => {
                 if (subcat.subcategoryID == (event.target.id)) {
+
+                    const docRef = doc(db, 'subcategories', subcat.subcategoryID.toString());
+                    const payload = {...subcat, subcategory: currentName};
+                    setDoc(docRef, payload);
+
                     return {...subcat , subcategory: currentName};
                 } else {
                     return subcat;
@@ -61,25 +70,41 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
     }
 
     function addCategory(event) {
+        const newCatId = setCategoryID(categories);
         setCategory(
             [...categories,
-            {categoryID: setCategoryID(categories), name: 'Category name', subcategories: []}]
+            {categoryID: newCatId, name: 'Category name', subcategories: []}]
         )
+
+        const docRef = doc(db, 'categories', newCatId.toString());
+        const payload = {categoryID: newCatId, name: 'Category name', subcategories: []};
+        setDoc(docRef, payload);
     }
 
     function addSubcategory(event) {
+        const newSubcatId = setSubcategoryID(subcategories);
         setSubcategories([
             ...subcategories,
-            {subcategoryID: setSubcategoryID(subcategories), subcategory: 'subcategory name', pageDescription: 'Subcategory description'}
+            {subcategoryID: newSubcatId, subcategory: 'subcategory name', pageDescription: 'Subcategory description'}
         ])
+
+        const docRef = doc(db, 'subcategories', newSubcatId.toString());
+        const payload = {subcategoryID: newSubcatId, subcategory: 'subcategory name', pageDescription: 'Subcategory description'};
+        setDoc(docRef, payload);
+        
         setCategory(
             categories.map(category => {
                 if (category.categoryID == event.target.id) {
                     let current = [...category.subcategories];
                     current = [
                         ...current,
-                        setSubcategoryID(subcategories)
+                        newSubcatId
                     ]
+
+                    const docRef = doc(db, 'categories', category.categoryID.toString());
+                    const payload = {...category, subcategories: current};
+                    setDoc(docRef, payload);
+
                     return {...category, subcategories: current}
                 } else {
                     return category;
@@ -108,6 +133,11 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
         setCategory(
             categories.map(cat => {
                 if (cat.categoryID == event.target.id) {
+
+                    const docRef = doc(db, 'categories', cat.categoryID.toString());
+                    const payload = {...cat, name: event.target.value};
+                    setDoc(docRef, payload);
+
                     return {...cat, name: event.target.value}
                 } else {
                     return cat;
@@ -145,7 +175,7 @@ function MyHomePage({isOpen, setIsOpen, categories, setCategory, subcategories, 
                         <>
                             <div  id={category.categoryID} key={category.categoryID}>
                                 <div className={classes.titleDiv}>
-                                    <input id={category.categoryID} onChange={changeCategoryName} value={category.name} className={rootCategoryClasses.join(' ')}></input>
+                                    <input disabled={editing} id={category.categoryID} onChange={changeCategoryName} value={category.name} className={rootCategoryClasses.join(' ')}></input>
                                 </div>
                                 <div className={classes.line}></div>
                                 <ul id={category.categoryID} className={classes.categoryList}>
