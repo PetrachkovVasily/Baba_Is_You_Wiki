@@ -16,7 +16,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
     const passwordInput = (document.getElementById('passwordInput'));
 
     const EXISTED_LOGIN = 'This login is alresdy existed';
-    const NOT_EXISTED_ACCOUNT = 'This login do not exist';
+    const NOT_EXISTED_ACCOUNT = 'Incorrect input';
     const BANNED_ACCOUNT = 'This account was bunned';
     const WRONG_PASSWORD = 'Wrong password';
 
@@ -46,7 +46,7 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
     async function addNewUser(loginInput, passwordInput) {
         let error = false;
         users.forEach(user => {
-            if (user.userName == loginInput.value)
+            if (user.userName == loginInput.value || loginInput.value == '' || passwordInput.value == '')
             error = true;
             return;
         })
@@ -67,7 +67,11 @@ function MyForm({visible, setVisible, switcher, setSwitcher, users, setUsers, se
             setErrorMessenge('');
             errorMessenge = '';
         } else {
-            setErrorMessenge(EXISTED_LOGIN);
+            if (loginInput.value == '' || passwordInput.value == '') {
+                setErrorMessenge(NOT_EXISTED_ACCOUNT);
+            } else {
+                setErrorMessenge(EXISTED_LOGIN);
+            }
         }
     }
 

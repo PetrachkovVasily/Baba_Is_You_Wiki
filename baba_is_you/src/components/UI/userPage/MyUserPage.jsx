@@ -38,6 +38,11 @@ function MyUserPage({users, setUsers, currentUserID, pages, setCurrentUserID}) {
     function bunnUser(event) {
         setUsers(users?.map(user => {
             if (user.userId == event.target.id) {
+
+                const docRef = doc(db, 'users', user.userId.toString());
+                const payload = {...user, isBlocked: true};
+                setDoc(docRef, payload);
+
                 return {...user, isBlocked: true};
             } else {
                 return user;
@@ -48,6 +53,11 @@ function MyUserPage({users, setUsers, currentUserID, pages, setCurrentUserID}) {
     function unBunnUser(event) {
         setUsers(users?.map(user => {
             if (user.userId == event.target.id) {
+                
+                const docRef = doc(db, 'users', user.userId.toString());
+                const payload = {...user, isBlocked: false};
+                setDoc(docRef, payload);
+
                 return {...user, isBlocked: false};
             } else {
                 return user;
@@ -86,20 +96,30 @@ function MyUserPage({users, setUsers, currentUserID, pages, setCurrentUserID}) {
                         {
                             users?.map(user => {
                                 return (
-                                    <li className={classes.linkElement} id={user.userId} key={user.userId}>
-                                        <li className={classes.link}>{user.userName}</li>
+                                    <>
                                         {
-                                            user.isBlocked ? (
-                                                <button className={classes.banned} key={user.userId} id={user.userId} onClick={unBunnUser}>
-                                                    {'Bunned'}
-                                                </button>   
+                                            user.isAdmin ? (
+                                                <></>
                                             ) : (
-                                                <button className={classes.active} key={user.userId} id={user.userId} onClick={bunnUser}>
-                                                    {'Active'}
-                                                </button>   
+                                                <li className={classes.linkElement} id={user.userId} key={user.userId}>
+                                                    <li className={classes.link}>{user.userName}</li>
+                                                    {
+                                                        user.isBlocked ? (
+                                                            <button className={classes.banned} key={user.userId} id={user.userId} onClick={unBunnUser}>
+                                                                {'Bunned'}
+                                                            </button>   
+                                                        ) : (
+                                                            <button className={classes.active} key={user.userId} id={user.userId} onClick={bunnUser}>
+                                                                {'Active'}
+                                                            </button>   
+                                                        )
+                                                    }
+                                                </li>
                                             )
                                         }
-                                    </li>
+                                        
+                                    </>
+                                    
                                 )
                             })
                         }

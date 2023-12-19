@@ -23,6 +23,9 @@ function MyCommentBlock({pageComments, setPageComments, comments, setComments, s
             setVisible(true)
             return;
         }
+        if (document.getElementById('comm').value == '') {
+            return;
+        }
         const newComment = checkComm(pageComments);
         setPageComments( //добавить шаманство с датой
             [...pageComments, {userName: users[users?.findIndex(user => user.userId == currentUserID)]?.userName, commentId: newComment, commentDate: Timestamp.fromDate(new Date()), commentText: commText}]
@@ -77,7 +80,7 @@ function MyCommentBlock({pageComments, setPageComments, comments, setComments, s
             <div className={classes.line}></div>
             <div className={classes.comLine}>
                 <img src={logo} width={60} height={60} alt="User icon"/>
-                <input placeholder="Comment" className={classes.comInput} value={commText} onChange={changeCommText}/>
+                <input id="comm" placeholder="Comment" className={classes.comInput} value={commText} onChange={changeCommText}/>
                 <button onClick={addComment} className={classes.comBtn}>Add comment</button>
             </div>
             {
